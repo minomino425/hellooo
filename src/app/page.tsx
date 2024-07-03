@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import Button from "@/components/button.tsx";
 import "@/styles/_base.scss";
 import "@/styles/_main.scss";
 
@@ -30,9 +31,11 @@ export default function Home() {
             </defs>
           </svg>
         </div>
-        <p className="main__copy">
+        <div className="main__copy">
           <img src="/copy.svg" alt="copy" />
-        </p>
+        </div>
+        <p className="main__caption">リアルとSNSをつなぐ名前シール</p>
+        <Button text="さっそく作ってみる"/>
       </div>
     </main>
   );

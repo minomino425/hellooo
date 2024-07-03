@@ -1,7 +1,46 @@
 //_config.scssを読み込む
+@use "./config.scss" as config;
 
 .main__wrapper {
-  padding: 35px 40px 0;
+  padding: config.vunitPc(35vw) config.vunitPc(40vw) 0;
 }
+
 .main__copy {
+  width: config.vunitPc(700vw);
+  margin: config.vunitPc(80vw) 0 config.vunitPc(40vw);
+}
+
+.main__caption{
+  font-size: config.vunitPc(24vw);
+  font-weight: 700;
+}
+
+.button{
+  display: inline-block;
+  background-color: #FD5100;
+  color: #fff;
+  border-radius: 20px;
+  transition: background-color 0.3s;
+  width: config.vunitPc(480vw);
+  padding: config.vunitPc(23vw) config.vunitPc(42vw) config.vunitPc(22vw);
+  margin: config.vunitPc(40vw) 0 0;
+  position: relative;
+  &:after{
+    content: "";
+    position: absolute;
+    top: 50%;
+    right: 12%;
+    transform: translateY(-50%);
+    background-image: url("/arrow.svg");
+    background-size: cover;
+    width: config.vunitPc(32vw);
+    height: config.vunitPc(15vw);
+  }
+}
+
+.button__text{
+  font-size: config.vunitPc(24vw);
+  padding: config.vunitPc(10vw) config.vunitPc(20vw);
+  font-weight: 700;
+  text-align: left;
 }
