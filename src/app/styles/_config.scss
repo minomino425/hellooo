@@ -58,7 +58,7 @@ $z-map: (
   }
 }
 
-@function vunitPc($input, $baseWidth: 1366, $baseHeight: 800) {
+@function vunitPc($input, $baseWidth: 1440, $baseHeight: 790) {
   $width: $baseWidth;
   $height: $baseHeight;
   $unit: unit($input);
