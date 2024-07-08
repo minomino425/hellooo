@@ -1,10 +1,16 @@
-import Image from "next/image";
-import Link from "next/link";
+'use client';
+import { useState } from "react";
 import Button from "@/components/button.tsx";
+import Modal from "@/components/Modal";
 import "@/styles/_base.scss";
 import "@/styles/_main.scss";
 
 export default function Home() {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const openModal = () => setIsModalOpen(true);
+  const closeModal = () => setIsModalOpen(false);
+
   return (
     <main>
       <div className="main__wrapper">
@@ -35,8 +41,9 @@ export default function Home() {
           <img src="/copy.svg" alt="copy" />
         </div>
         <p className="main__caption">リアルとSNSをつなぐ名前シール</p>
-        <Button text="さっそく作ってみる"/>
+        <Button onOpen={openModal} text="さっそく作ってみる"/>
       </div>
+      <Modal isOpen={isModalOpen} onClose={closeModal} />
     </main>
   );
 }
