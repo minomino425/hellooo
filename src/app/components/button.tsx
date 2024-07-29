@@ -2,7 +2,7 @@ import React from "react";
 
 type ButtonProps = {
   text: string;
-  onOpen: () => void;
+  onOpen?: () => void;
 };
 
 export default function Button(props: ButtonProps) {

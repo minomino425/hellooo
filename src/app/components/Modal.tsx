@@ -1,6 +1,7 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
+import StepButton from "./stepButton";
 
 interface ModalProps {
   isOpen: boolean;
@@ -9,6 +10,15 @@ interface ModalProps {
 
 export default function Modal(props: ModalProps) {
   const { isOpen, onClose } = props;
+  const [step, setStep] = useState(1);
+
+  const handleNext = () => {
+    setStep((prevStep) => prevStep + 1);
+  };
+
+  const handleBack = () => {
+    setStep((prevStep) => prevStep - 1);
+  };
 
   return (
     <>
@@ -16,17 +26,40 @@ export default function Modal(props: ModalProps) {
         <div className="modal">
           <div className="modal__wrapper">
             <p className="modal__step">
-              <span className="modal__stepNumber">1</span>
-              <span className="modal__step">2</span>
-              <span className="modal__step">3</span>
+              {
+                
+                <>
+                  <span className={`modal__stepNumber ${step === 1 ? "active" : ""}`} key={1}>1</span>
+                  <span className={`modal__stepNumber ${step === 2 ? "active" : ""}`} key={1}>2</span>
+                  <span className={`modal__stepNumber ${step === 3 ? "active" : ""}`} key={1}>3</span>
+                </>
+              }
             </p>
-            <p className="modal__title">Chrome拡張機能を追加</p>
+            <p className="modal__title">
+              {step === 1 && "Chrome拡張機能を追加"}
+              {step === 2 && "用紙の選択"}
+              {step === 3 && "アカウントリストをドラッグ&ドロップ"}
+            </p>
             <div className="modal__content">
               <p className="modal__text">
-                <a href="" className="modal__link">こちら</a>からChrome拡張機能を追加してください。
+                {step === 1 && (
+                  <>
+                    <a href="" className="modal__link">
+                      こちら
+                    </a>
+                    からChrome拡張機能を追加してください。
+                  </>
+                )}
+                {step === 2 && "用紙を選択してください。"}
+                {step === 3 &&
+                  "このような形式で1アカウント1行のテキストファイルを用意してください。"}
               </p>
             </div>
-            <button onClick={onClose}>Close</button>
+            <button onClick={onClose} className="modal__close"></button>
+            <div className="modal__buttons">
+              {step > 1 && <StepButton text="戻る" onClick={handleBack} classText="button__back"/>}
+              {step < 3 && <StepButton text="次へ" onClick={handleNext} classText="button__next"/>}
+            </div>
           </div>
         </div>
       )}
