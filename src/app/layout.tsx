@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Noto_Sans_JP, Roboto } from "next/font/google";
 import "@/styles/_base.scss";
 
-const inter = Inter({ subsets: ["latin"] });
+const notoSansJp = Noto_Sans_JP({ weight: ["400", "700"], subsets: ["latin"] });
+const roboto = Roboto({ weight: ["400", "700"], subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Hellooo",
@@ -15,8 +16,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ja">
-      <body>{children}</body>
-    </html>
+    <>
+      <html lang="ja">
+        <body>{children}</body>
+      </html>
+      <style jsx global>{`
+        html {
+          font-family: ${roboto.style.fontFamily},
+          ${notoSansJp.style.fontFamily};
+        }
+      `}</style>
+    </>
   );
 }
