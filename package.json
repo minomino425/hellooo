@@ -10,11 +10,13 @@
   },
   "dependencies": {
     "next": "14.2.3",
+    "pixi.js": "^8.4.1",
     "react": "^18",
     "react-dom": "^18"
   },
   "devDependencies": {
     "@types/node": "^20",
+    "@types/pixi.js": "^5.0.0",
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "eslint": "^8.57.0",
