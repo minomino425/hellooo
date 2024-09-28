@@ -100,19 +100,19 @@
     right: 0;
     width: 100%;
     height: 100%;
-    background: url("/close.svg") no-repeat center; 
+    background: url("/close.svg") no-repeat center;
     background-size: cover;
   }
 }
 
-.modal__step{
+.modal__step {
   display: flex;
   gap: config.vunitPc(30vw);
   margin-top: config.vunitPc(40vw);
   position: relative;
   width: fit-content;
   z-index: 1;
-  &:after{
+  &:after {
     content: "";
     width: 100%;
     height: config.vunitPc(1vw);
@@ -125,7 +125,7 @@
   }
 }
 
-.modal__stepNumber{
+.modal__stepNumber {
   width: config.vunitPc(30vw);
   height: config.vunitPc(30vw);
   display: grid;
@@ -137,25 +137,24 @@
   border-radius: 50%;
   background-color: #fff;
   font-family: "Roboto", sans-serif;
-  &:last-child{
-    &:after{
+  &:last-child {
+    &:after {
       display: none;
     }
   }
-  &.active{
+  &.active {
     background-color: #000;
     color: #fff;
   }
 }
 
-.modal__buttons{
+.modal__buttons {
   display: flex;
   justify-content: space-between;
   margin-top: config.vunitPc(40vw);
 }
 
-
-.button__step{
+.button__step {
   display: inline-block;
   background-color: #fd5100;
   color: #fff;
@@ -165,17 +164,29 @@
   margin-top: config.vunitPc(40vw);
   position: relative;
   cursor: pointer;
-  &.button__back{
+  &.button__back {
     margin-right: auto;
-    background-color: #D9D9D9;
+    background-color: #d9d9d9;
     color: #000;
   }
-  &.button__next{
+  &.button__next {
     margin-left: auto;
   }
 }
 
-.button__step-text{
+.button__step-text {
   font-size: config.vunitPc(12vw);
   font-weight: 700;
+}
+
+//--------------------------------------------------
+// bg
+//--------------------------------------------------
+canvas.bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
 }

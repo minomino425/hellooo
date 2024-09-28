@@ -1,40 +1,28 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Web
+[README](./web/README.md)
 
-## Getting Started
 
-First, run the development server:
+# Chrome Extension
 
-```bash
-npm run dev
-# or
+## セットアップ
+
+### コマンド
+```
+nodenv install
+yarn
 yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Chrome拡張のインストール
+参考：https://note.com/cute_echium873/n/n997dcf40b3a1
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+1. Chromeのアドレスバー右にある拡張アイコンから拡張機能の管理を選択
+2. 画面右上の「デベロッパーモード」をOnに
+3. 画面左上の「パッケージ化されていない拡張機能を読み込む」を選択
+4. distフォルダを選択
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+# Common
+Chrome拡張からもWebからも参照する共通の用紙データ
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
-# hellooo
-# hellooo
-# hellooo
-# hellooo
+# _test-data
+テスト用のXアカウントリストなど

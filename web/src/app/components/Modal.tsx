@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import StepButton from "./stepButton";
 
 interface ModalProps {
@@ -12,7 +12,21 @@ export default function Modal(props: ModalProps) {
   const { isOpen, onClose } = props;
   const [step, setStep] = useState(1);
 
+  // 拡張機能がインストールされているかチェック
+  const checkExtensionInstalled = () => {
+    return document.documentElement.classList.contains("hellooo-installed");
+  };
+
+  // インストール済みの場合はステップ2に進む
+  useEffect(() => {
+    if (checkExtensionInstalled()) setStep(2);
+  }, [isOpen]);
+
   const handleNext = () => {
+    if (step === 1 && !checkExtensionInstalled()) {
+      alert("Chrome拡張機能がインストールされていません。");
+      return;
+    }
     setStep((prevStep) => prevStep + 1);
   };
 
@@ -27,11 +41,25 @@ export default function Modal(props: ModalProps) {
           <div className="modal__wrapper">
             <p className="modal__step">
               {
-                
                 <>
-                  <span className={`modal__stepNumber ${step === 1 ? "active" : ""}`} key={1}>1</span>
-                  <span className={`modal__stepNumber ${step === 2 ? "active" : ""}`} key={1}>2</span>
-                  <span className={`modal__stepNumber ${step === 3 ? "active" : ""}`} key={1}>3</span>
+                  <span
+                    className={`modal__stepNumber ${step === 1 ? "active" : ""}`}
+                    key={1}
+                  >
+                    1
+                  </span>
+                  <span
+                    className={`modal__stepNumber ${step === 2 ? "active" : ""}`}
+                    key={1}
+                  >
+                    2
+                  </span>
+                  <span
+                    className={`modal__stepNumber ${step === 3 ? "active" : ""}`}
+                    key={1}
+                  >
+                    3
+                  </span>
                 </>
               }
             </p>
@@ -57,8 +85,20 @@ export default function Modal(props: ModalProps) {
             </div>
             <button onClick={onClose} className="modal__close"></button>
             <div className="modal__buttons">
-              {step > 1 && <StepButton text="戻る" onClick={handleBack} classText="button__back"/>}
-              {step < 3 && <StepButton text="次へ" onClick={handleNext} classText="button__next"/>}
+              {step > 1 && (
+                <StepButton
+                  text="戻る"
+                  onClick={handleBack}
+                  classText="button__back"
+                />
+              )}
+              {step < 3 && (
+                <StepButton
+                  text="次へ"
+                  onClick={handleNext}
+                  classText="button__next"
+                />
+              )}
             </div>
           </div>
         </div>
