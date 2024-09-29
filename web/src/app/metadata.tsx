@@ -2,5 +2,5 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Hellooo",
-  description: "リアルとSNSをつなぐ名前シール",
+  description: "イベントでの繋がりを加速する、リアルとSNSをつなぐ名前シール",
 };

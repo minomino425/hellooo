@@ -87,7 +87,9 @@ export default function Home() {
         <div className="main__copy">
           <img src="/copy.svg" alt="copy" />
         </div>
-        <p className="main__caption">リアルとSNSをつなぐ名前シール</p>
+        <p className="main__caption">
+          イベントでの繋がりを加速する、リアルとSNSをつなぐ名前シール
+        </p>
         <Button onOpen={openModal} text="さっそく作ってみる" />
       </div>
       <Modal isOpen={isModalOpen} onClose={closeModal} />
