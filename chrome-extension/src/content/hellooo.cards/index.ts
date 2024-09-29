@@ -57,7 +57,7 @@ export default class App {
 		this.#accountLists = await this.#getAccountLists(items);
 
 		// 用紙選択されていない場合
-		if (this.#step < 2 && !this.#selectedTemplate) {
+		if (this.#step < 2 || !this.#selectedTemplate) {
 			alert('用紙を選択してください。');
 			window.postMessage({ type: 'openStep', step: 2 }, '*');
 			return;

@@ -81,6 +81,7 @@ export default class CardColumnContainer extends Container {
    * カードを再生成
    */
   reset = () => {
+    this.scroll = 0;
     const wh = window.innerHeight;
 
     // いったん全てのカードを削除
