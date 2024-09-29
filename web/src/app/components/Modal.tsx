@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import StepButton from "./stepButton";
+import TemplateList from "./templateList";
 
 interface ModalProps {
   isOpen: boolean;
@@ -82,6 +83,7 @@ export default function Modal(props: ModalProps) {
                 {step === 3 &&
                   "このような形式で1アカウント1行のテキストファイルを用意してください。"}
               </p>
+              {step == 2 && <TemplateList />}
             </div>
             <button onClick={onClose} className="modal__close"></button>
             <div className="modal__buttons">
