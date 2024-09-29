@@ -1,4 +1,5 @@
 export interface LabelTemplate {
+	id: string
 	url: string
 	modelNumber: string
 	maker: string

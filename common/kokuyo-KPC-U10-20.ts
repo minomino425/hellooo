@@ -1,6 +1,7 @@
 import { LabelTemplate } from './_interface'
 
 export const kokuyo_KPC_U10_20 = {
+	id: 'kokuyo-KPC-U10-20',
 	maker: 'KOKUYO',
 	modelNumber: 'KPC-U10-20',
 	url: 'https://www.kokuyo-st.co.jp/search/1_detail.php?seihin_sikibetu=1&ss1=13&ss2=13B1&sid=100123785&pgmax=80',

@@ -3,24 +3,34 @@ import { LabelTemplate } from "../../../../common/_interface";
 
 type TemplateOptionProps = {
   data: LabelTemplate;
+  selected: boolean;
+  onSelect: (id: string) => void;
 };
 
 export default function TemplateOption(props: TemplateOptionProps) {
-  const { data } = props;
+  const { data, selected, onSelect } = props;
+
+  const onClick = () => {
+    onSelect(data.id);
+  };
+
   return (
-    <li>
-      <div className="template__icon">
+    <li
+      className={`template-list__option ${selected ? "selected" : ""}`}
+      onClick={onClick}
+    >
+      <div className="template-list__icon">
         <img src={`/template-icons/${data.iconImage}`} width={60} height={60} />
       </div>
       <div>
         <ul>
-          <li className="template__maker">{data.maker}</li>
-          <li className="template__model">
+          <li className="template-list__maker">{data.maker}</li>
+          <li className="template-list__model">
             <a href={data.url} target="_blank">
               {data.modelNumber}
             </a>
           </li>
-          <li className="template__amazon">
+          <li className="template-list__amazon">
             <a href={data.amazonUrl} target="_blank">
               Amazonで購入
             </a>
