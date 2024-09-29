@@ -53,7 +53,7 @@ export default class CardContainer extends Container {
     }
 
     this.columns.forEach((column) => column.reset());
-    this.x = window.innerWidth / 2;
+    this.x = window.innerWidth / 2 + 60;
     this.y = window.innerHeight / 2;
     this.container.y = -this.y;
   };

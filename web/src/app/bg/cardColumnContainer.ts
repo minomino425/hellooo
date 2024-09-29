@@ -6,7 +6,7 @@ export default class CardColumnContainer extends Container {
   cards: Card[] = [];
   direction: number = 1;
   scroll: number = 0;
-  scrollSpeed: number = 0.0075;
+  scrollSpeed: number = 0.003;
   requestAnimationFrameId: number = 0;
 
   /**

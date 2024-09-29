@@ -1,7 +1,8 @@
-import { jsPDF } from "jspdf";
+import { jsPDF } from 'jspdf';
+//@ts-ignore
 import QRious from 'qrious';
-import { Icon } from "./interface";
-import { LabelTemplate } from "./templates/_interface";
+import { Icon } from './interface';
+import { LabelTemplate } from './templates/_interface';
 
 export default class Pdf {
 	#qr: QRious;
@@ -18,7 +19,11 @@ export default class Pdf {
 		const numCardsPerPage = template.page.numCardsX * template.page.numCardsY;
 		for (let i = 0; i < icons.length / numCardsPerPage; i++) {
 			if (i > 0) doc.addPage();
-			await this.#createPage(doc, icons.slice(i * numCardsPerPage, (i + 1) * numCardsPerPage), template);
+			await this.#createPage(
+				doc,
+				icons.slice(i * numCardsPerPage, (i + 1) * numCardsPerPage),
+				template
+			);
 		}
 		doc.save('cards.pdf');
 	}
@@ -44,8 +49,12 @@ export default class Pdf {
 		doc.setFontSize(12);
 		const account = icon.account;
 		const numColumns = template.page.numCardsX;
-		const x = template.page.marginLeft + (index % numColumns) * (template.card.width + template.card.offsetX)
-		const y = (template.page.marginTop + Math.floor(index / numColumns) * (template.card.height + template.card.offsetY))
+		const x =
+			template.page.marginLeft +
+			(index % numColumns) * (template.card.width + template.card.offsetX);
+		const y =
+			template.page.marginTop +
+			Math.floor(index / numColumns) * (template.card.height + template.card.offsetY);
 		// for test
 		// doc.line(x, y, x + CARD_WIDTH, y);
 		// doc.line(x, y + CARD_HEIGHT, x + CARD_WIDTH, y + CARD_HEIGHT);
@@ -57,7 +66,14 @@ export default class Pdf {
 		// qr
 		this.#qr.set({ value: `https://x.com/${account}` });
 		const qr = this.#qr.toDataURL('image/png');
-		doc.addImage(qr, 'image/png', x + 4, y + template.card.iconSize + 4 + 3, template.card.qrSize, template.card.qrSize);
+		doc.addImage(
+			qr,
+			'image/png',
+			x + 4,
+			y + template.card.iconSize + 4 + 3,
+			template.card.qrSize,
+			template.card.qrSize
+		);
 		// text
 		const marginLeft = template.card.iconSize + 10;
 		const marginTop = 6;
