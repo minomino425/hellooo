@@ -1,4 +1,4 @@
-import { Container, Graphics, Text } from "pixi.js";
+import { Container, Graphics, Text, Texture } from "pixi.js";
 import CardBg from "./cardBg";
 import Card from "./card";
 
@@ -8,13 +8,17 @@ export default class CardColumnContainer extends Container {
   scroll: number = 0;
   scrollSpeed: number = 0.003;
   requestAnimationFrameId: number = 0;
+  iconTexture: Texture;
+  qrTexture: Texture;
 
   /**
    * コンストラクタ
    */
-  constructor(direction: number = 1) {
+  constructor(direction: number = 1, iconTexture: Texture, qrTexture: Texture) {
     super();
     this.direction = direction;
+    this.iconTexture = iconTexture;
+    this.qrTexture = qrTexture;
     this.update();
   }
 
@@ -62,7 +66,7 @@ export default class CardColumnContainer extends Container {
     const margin = 10;
     const numRows = wh / (CardBg.HEIGHT + margin) + 2;
     for (let y = 0; y < numRows; y++) {
-      const card = new Card();
+      const card = new Card(this.iconTexture, this.qrTexture);
       const delay = (this.direction > 0 ? y : numRows - y) * 0.035;
       card.show(delay);
       this.addChild(card);

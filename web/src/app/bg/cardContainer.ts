@@ -1,4 +1,4 @@
-import { Container, Graphics } from "pixi.js";
+import { Assets, Container, Graphics, Texture } from "pixi.js";
 import CardBg from "./cardBg";
 import CardColumnContainer from "./cardColumnContainer";
 
@@ -6,16 +6,24 @@ export default class CardContainer extends Container {
   resizeTimer: number = 0;
   container: Container = new Container();
   columns: CardColumnContainer[] = [];
+  iconTexture?: Texture;
+  qrTexture?: Texture;
 
   /**
    * コンストラクタ
    */
   constructor() {
     super();
-    this._onResize();
-    window.addEventListener("resize", this.onResize);
+    this.init();
+  }
+
+  async init() {
+    this.iconTexture = await Assets.load("/images/icon.jpg");
+    this.qrTexture = await Assets.load("/images/qr.png");
     this.addChild(this.container);
     this.rotation = 15 * (Math.PI / 180);
+    this._onResize();
+    window.addEventListener("resize", this.onResize);
   }
 
   /**
@@ -39,6 +47,8 @@ export default class CardContainer extends Container {
       if (this.columns.length < numColumns) {
         const column = new CardColumnContainer(
           this.columns.length % 2 == 0 ? 1 : -1,
+          this.iconTexture!,
+          this.qrTexture!,
         );
         column.x = this.columns.length * (CardBg.WIDTH + margin);
         this.container.addChild(column);
