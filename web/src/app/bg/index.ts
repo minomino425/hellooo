@@ -42,17 +42,18 @@ export default class Bg {
    */
   async setIcons(icons: Icon[]) {
     // アイコンを1つのキャンバスにスプライトシート化して描画
+    const offset = 2;
     const iconCanvas = document.createElement("canvas");
     const qrCanvas = document.createElement("canvas");
     const iconSize = 70 * 2;
     const maxCanvasSize = 2048;
-    const maxNumCols = Math.floor(maxCanvasSize / iconSize); // 2048 / 140 = 14.6
+    const maxNumCols = Math.floor(maxCanvasSize / (iconSize + offset)); // 2048 / 140 = 14.6
     const numCols = Math.min(icons.length, maxNumCols);
     const numRows = Math.ceil(icons.length / numCols);
-    iconCanvas.width = iconSize * numCols;
-    iconCanvas.height = iconSize * numRows;
-    qrCanvas.width = iconSize * numCols;
-    qrCanvas.height = iconSize * numRows;
+    iconCanvas.width = (iconSize + offset) * numCols;
+    iconCanvas.height = (iconSize + offset) * numRows;
+    qrCanvas.width = (iconSize + offset) * numCols;
+    qrCanvas.height = (iconSize + offset) * numRows;
     const iconCtx = iconCanvas.getContext("2d")!;
     const qrCtx = qrCanvas.getContext("2d")!;
     for (let i = 0; i < icons.length; i++) {
@@ -65,8 +66,8 @@ export default class Bg {
       });
       iconCtx.drawImage(
         iconImg,
-        col * iconSize,
-        row * iconSize,
+        col * (iconSize + offset),
+        row * (iconSize + offset),
         iconSize,
         iconSize,
       );
@@ -78,8 +79,8 @@ export default class Bg {
         });
         qrCtx.drawImage(
           qrImg,
-          col * iconSize,
-          row * iconSize,
+          col * (iconSize + offset),
+          row * (iconSize + offset),
           iconSize,
           iconSize,
         );
@@ -103,8 +104,8 @@ export default class Bg {
       const row = Math.floor(i / numCols);
       frames[icons[i]!.account] = {
         frame: {
-          x: col * iconSize,
-          y: row * iconSize,
+          x: col * (iconSize + offset),
+          y: row * (iconSize + offset),
           w: iconSize,
           h: iconSize,
         },
