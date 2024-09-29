@@ -63,6 +63,8 @@ export default class CardColumnContainer extends Container {
     const numRows = wh / (CardBg.HEIGHT + margin) + 2;
     for (let y = 0; y < numRows; y++) {
       const card = new Card();
+      const delay = (this.direction > 0 ? y : numRows - y) * 0.035;
+      card.show(delay);
       this.addChild(card);
       this.cards.push(card);
     }

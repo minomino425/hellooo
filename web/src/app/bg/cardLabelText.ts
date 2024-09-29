@@ -1,18 +1,21 @@
 import { Text } from "pixi.js";
+import TypewriterText from "./typewriterText";
 
-export default class CardLabelText extends Text {
+export default class CardLabelText extends TypewriterText {
   /**
    * コンストラクタ
    */
   constructor(text: string, x: number, y: number) {
-    super({
-      style: {
-        fontFamily: "sans-serif",
-        letterSpacing: 0.5,
-        fontSize: 7,
+    super(
+      {
+        style: {
+          fontFamily: "sans-serif",
+          letterSpacing: 0.5,
+          fontSize: 7,
+        },
       },
-    });
-    this.text = text;
+      text,
+    );
     this.x = x;
     this.y = y;
   }
