@@ -26,11 +26,8 @@ export default function Modal(props: ModalProps) {
 
   // モーダルの開閉状態とステップを監視してChrome拡張機能側に伝える
   useEffect(() => {
-    [0, 1, 2, 3].forEach((i) =>
-      document.documentElement.classList.remove(`step-${i}`),
-    );
     const s = isOpen ? step : 0;
-    document.documentElement.classList.add(`step-${s}`);
+    window.postMessage({ type: "step", step: s }, "*");
   }, [isOpen, step]);
 
   // 拡張機能がインストールされているかチェック

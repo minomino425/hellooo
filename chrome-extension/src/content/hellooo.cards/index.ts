@@ -6,6 +6,8 @@ import { Templates } from '../../../../common';
 export default class App {
 	#dropArea: HTMLDivElement;
 	#pdf: Pdf;
+	#accountLists: File[] = [];
+	#step: number = 0;
 	#selectedTemplate: LabelTemplate | undefined = undefined;
 
 	constructor() {
@@ -16,6 +18,17 @@ export default class App {
 		window.addEventListener('message', (event: MessageEvent) => {
 			if (event.data.type == 'selectTemplate' && event.data.selectedTemplateId) {
 				this.#selectedTemplate = Templates.getById(event.data.selectedTemplateId);
+			}
+			if (event.data.type == 'step') {
+				this.#step = event.data.step;
+			}
+			if (
+				event.data.type == 'step' &&
+				event.data.step === 3 &&
+				this.#accountLists.length > 0 &&
+				this.#selectedTemplate
+			) {
+				this.#getIconsAndCreatePdf();
 			}
 		});
 
@@ -39,20 +52,23 @@ export default class App {
 			alert('アカウントリストのテキストファイルをドラッグ＆ドロップしてください。');
 			return;
 		}
-		if (
-			(!document.documentElement.classList.contains('step-2') &&
-				!document.documentElement.classList.contains('step-3')) ||
-			!this.#selectedTemplate
-		) {
+		// アカウントリスト取得
+		const items = event.dataTransfer.items;
+		this.#accountLists = await this.#getAccountLists(items);
+
+		// 用紙選択されていない場合
+		if (this.#step < 2 && !this.#selectedTemplate) {
 			alert('用紙を選択してください。');
 			window.postMessage({ type: 'openStep', step: 2 }, '*');
 			return;
 		}
 
-		// filesの初期化
-		const items = event.dataTransfer.items;
-		const accountLists = await this.#accountLists(items);
-		const icons = await this.#getIcons(accountLists);
+		// PDF生成
+		await this.#getIconsAndCreatePdf();
+	};
+
+	#getIconsAndCreatePdf = async () => {
+		const icons = await this.#getIcons(this.#accountLists);
 		if (icons !== false) {
 			window.postMessage({ type: 'startCreatePdf' }, '*');
 			await this.#pdf.create(icons, this.#selectedTemplate!);
@@ -82,7 +98,7 @@ export default class App {
 	 * @param items
 	 * @returns
 	 */
-	async #accountLists(items: DataTransferItemList) {
+	async #getAccountLists(items: DataTransferItemList) {
 		const accountLists: File[] = [];
 		const calcFullPathPerItems = Array.from(items).map((item) => {
 			return new Promise<void>(async (resolve) => {
