@@ -2,6 +2,12 @@
 [README](./web/README.md)
 
 
+# 用紙テンプレートの追加方法
+
+### 定義ファイル追加
+1. /common/ 以下に定義ファイルを作成
+2. /web/public/template-icons 以下にアイコン画像を配置
+
 # Chrome Extension
 
 ## セットアップ
