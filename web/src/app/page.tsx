@@ -5,20 +5,45 @@ import Modal from "@/components/Modal";
 import "@/styles/_base.scss";
 import "@/styles/_main.scss";
 
+const bg = require("@/bg");
+
 export default function Home() {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   // Bg初期化
   useEffect(() => {
-    require("@/bg").default.init();
+    bg.default.init();
+  }, []);
+
+  // window.postMessageを受け取って、モーダルを開く
+  useEffect(() => {
+    const onGetMessage = (event: MessageEvent) => {
+      if (event.data.type == "openStep" && event.data.step === 2) {
+        setIsModalOpen(true);
+      } else if (event.data.type == "startGetIcons") {
+        console.log("startGetIcons");
+      } else if (event.data.type == "endGetIcons") {
+        console.log(event.data.icons);
+      } else if (event.data.type == "startCreatePdf") {
+        console.log("startCreatePdf");
+      } else if (event.data.type == "endCreatePdf") {
+        console.log("endCreatePdf");
+        setIsModalOpen(false);
+        bg.default.getInstance().setIcons(event.data.icons);
+      }
+    };
+    window.addEventListener("message", onGetMessage);
+    return () => {
+      window.removeEventListener("message", onGetMessage);
+    };
   }, []);
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
 
   return (
-    <main>
-      <div className="main__wrapper" id="drop__area">
+    <main id="drop-area">
+      <div className="main__wrapper">
         <div className="main__logo">
           <svg
             width="153"

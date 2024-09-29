@@ -1,21 +1,32 @@
-import { Container, Graphics, Text, Texture } from "pixi.js";
+import { Container, Graphics, Spritesheet, Text, Texture } from "pixi.js";
 import CardBg from "./cardBg";
 import Card from "./card";
+import { Icon } from "../../../../common/_interface";
 
 export default class CardColumnContainer extends Container {
   cards: Card[] = [];
+  index: number;
   direction: number = 1;
   scroll: number = 0;
   scrollSpeed: number = 0.003;
   requestAnimationFrameId: number = 0;
   iconTexture: Texture;
   qrTexture: Texture;
+  icons: Icon[] = [];
+  iconSpriteSheet?: Spritesheet;
+  qrSpriteSheet?: Spritesheet;
 
   /**
    * コンストラクタ
    */
-  constructor(direction: number = 1, iconTexture: Texture, qrTexture: Texture) {
+  constructor(
+    index: number,
+    direction: number,
+    iconTexture: Texture,
+    qrTexture: Texture,
+  ) {
     super();
+    this.index = index;
     this.direction = direction;
     this.iconTexture = iconTexture;
     this.qrTexture = qrTexture;
@@ -53,6 +64,20 @@ export default class CardColumnContainer extends Container {
   }
 
   /**
+   *
+   * @param icons
+   */
+  setIcons(
+    icons: Icon[],
+    iconSpriteSheet: Spritesheet,
+    qrSpriteSheet: Spritesheet,
+  ) {
+    this.icons = icons;
+    this.iconSpriteSheet = iconSpriteSheet;
+    this.qrSpriteSheet = qrSpriteSheet;
+  }
+
+  /**
    * カードを再生成
    */
   reset = () => {
@@ -64,9 +89,17 @@ export default class CardColumnContainer extends Container {
 
     // カードを再生成
     const margin = 10;
-    const numRows = wh / (CardBg.HEIGHT + margin) + 2;
+    const numRows = Math.ceil(wh / (CardBg.HEIGHT + margin)) + 2;
+    const iconOffset = numRows * this.index;
+
     for (let y = 0; y < numRows; y++) {
-      const card = new Card(this.iconTexture, this.qrTexture);
+      const icon = this.icons[(y + iconOffset) % this.icons.length];
+      const iconTexture =
+        (icon && this.iconSpriteSheet?.textures[icon.account]) ||
+        this.iconTexture;
+      const qrTexture =
+        (icon && this.qrSpriteSheet?.textures[icon.account]) || this.qrTexture;
+      const card = new Card(icon || null, iconTexture, qrTexture);
       const delay = (this.direction > 0 ? y : numRows - y) * 0.035;
       card.show(delay);
       this.addChild(card);

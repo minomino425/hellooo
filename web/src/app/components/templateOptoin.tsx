@@ -17,6 +17,7 @@ export default function TemplateOption(props: TemplateOptionProps) {
   return (
     <li
       className={`template-list__option ${selected ? "selected" : ""}`}
+      data-id={data.id}
       onClick={onClick}
     >
       <div className="template-list__icon">

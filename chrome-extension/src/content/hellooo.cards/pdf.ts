@@ -1,8 +1,7 @@
 import { jsPDF } from 'jspdf';
 //@ts-ignore
 import QRious from 'qrious';
-import { Icon } from './interface';
-import { LabelTemplate } from './templates/_interface';
+import { Icon, LabelTemplate } from '../../../../common/_interface';
 
 export default class Pdf {
 	#qr: QRious;
@@ -25,7 +24,7 @@ export default class Pdf {
 				template
 			);
 		}
-		doc.save('cards.pdf');
+		doc.save('hellooo.pdf');
 	}
 
 	/**
@@ -66,6 +65,7 @@ export default class Pdf {
 		// qr
 		this.#qr.set({ value: `https://x.com/${account}` });
 		const qr = this.#qr.toDataURL('image/png');
+		icon.qr = qr;
 		doc.addImage(
 			qr,
 			'image/png',

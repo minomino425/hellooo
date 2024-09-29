@@ -1,19 +1,24 @@
 import { getFilesRecursive } from './utils';
 import Pdf from './pdf';
-import { Icon } from './interface';
-import { kokuyo_KPC_U10_20 } from './templates/kokuyo-KPC-U10-20';
-import { LabelTemplate } from './templates/_interface';
+import { Icon, LabelTemplate } from '../../../../common/_interface';
+import { Templates } from '../../../../common';
 
 export default class App {
 	#dropArea: HTMLDivElement;
 	#pdf: Pdf;
-	#selectedTemplate: LabelTemplate | null = null;
+	#selectedTemplate: LabelTemplate | undefined = undefined;
 
 	constructor() {
 		this.#pdf = new Pdf();
 		document.documentElement.classList.add('hellooo-installed');
-		this.#dropArea = document.querySelector<HTMLDivElement>('#drop__area')!;
-		console.log(this.#dropArea);
+		this.#dropArea = document.querySelector<HTMLDivElement>('#drop-area')!;
+		//
+		window.addEventListener('message', (event: MessageEvent) => {
+			if (event.data.type == 'selectTemplate' && event.data.selectedTemplateId) {
+				this.#selectedTemplate = Templates.getById(event.data.selectedTemplateId);
+			}
+		});
+
 		if (this.#dropArea) {
 			this.#dropArea.addEventListener('drop', this.#onDrop, false);
 			this.#dropArea.addEventListener('dragover', this.#onDragOver, false);
@@ -30,13 +35,29 @@ export default class App {
 	#onDrop = async (event: DragEvent) => {
 		this.#dropArea.classList.remove('dragover');
 		event.preventDefault();
-		if (!event.dataTransfer) return;
+		if (!event.dataTransfer) {
+			alert('アカウントリストのテキストファイルをドラッグ＆ドロップしてください。');
+			return;
+		}
+		if (
+			(!document.documentElement.classList.contains('step-2') &&
+				!document.documentElement.classList.contains('step-3')) ||
+			!this.#selectedTemplate
+		) {
+			alert('用紙を選択してください。');
+			window.postMessage({ type: 'openStep', step: 2 }, '*');
+			return;
+		}
+
 		// filesの初期化
 		const items = event.dataTransfer.items;
 		const accountLists = await this.#accountLists(items);
 		const icons = await this.#getIcons(accountLists);
-		console.log(icons);
-		this.#pdf.create(icons, kokuyo_KPC_U10_20);
+		if (icons !== false) {
+			window.postMessage({ type: 'startCreatePdf' }, '*');
+			await this.#pdf.create(icons, this.#selectedTemplate!);
+			window.postMessage({ type: 'endCreatePdf', icons }, '*');
+		}
 	};
 
 	/**
@@ -85,7 +106,7 @@ export default class App {
 	 * @param accountLists
 	 * @returns
 	 */
-	async #getIcons(accountLists: File[]): Promise<Icon[]> {
+	async #getIcons(accountLists: File[]): Promise<Icon[] | false> {
 		// get account names
 		async function read(file: File): Promise<string[]> {
 			return new Promise((resolve, reject) => {
@@ -113,28 +134,32 @@ export default class App {
 			});
 		}
 
-		if (confirm('X（Twitter）のアイコンを取得するため、リスト内のアカウントのページを開きます。')) {
-			const icons = await new Promise<Icon[]>((resolve) => {
-				chrome.runtime.sendMessage({ accounts }, (response) => {
-					chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-						if (message.sessionId === response.sessionId) resolve(message.icons);
-						sendResponse();
-					});
+		if (
+			!confirm('X（Twitter）のアイコンを取得するため、リスト内のアカウントのページを開きます。')
+		) {
+			return false;
+		}
+		window.postMessage({ type: 'startGetIcons' }, '*');
+		const icons = await new Promise<Icon[]>((resolve) => {
+			chrome.runtime.sendMessage({ accounts }, (response) => {
+				chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+					if (message.sessionId === response.sessionId) resolve(message.icons);
+					sendResponse();
 				});
 			});
-			const errorAccounts: string[] = [];
-			const filtered = icons.filter((icon) => {
-				if (icon.data === '') {
-					errorAccounts.push(icon.account);
-					return false;
-				}
-				return true;
-			});
-			if (errorAccounts.length > 0) {
-				alert('以下のアカウントのアイコンが取得できませんでした。\n' + errorAccounts.join('\n'));
+		});
+		const errorAccounts: string[] = [];
+		const filtered = icons.filter((icon) => {
+			if (icon.data === '') {
+				errorAccounts.push(icon.account);
+				return false;
 			}
-			return filtered;
+			return true;
+		});
+		window.postMessage({ type: 'endGetIcons' }, '*');
+		if (errorAccounts.length > 0) {
+			alert('以下のアカウントのアイコンが取得できませんでした。\n' + errorAccounts.join('\n'));
 		}
-		return [];
+		return filtered;
 	}
 }

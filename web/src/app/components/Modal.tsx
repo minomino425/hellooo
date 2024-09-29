@@ -13,6 +13,26 @@ export default function Modal(props: ModalProps) {
   const { isOpen, onClose } = props;
   const [step, setStep] = useState(1);
 
+  // window.postMessageを受け取って、ステップを進める
+  useEffect(() => {
+    const onGetMessage = (event: MessageEvent) => {
+      if (event.data.type == "openStep" && event.data.step === 2) setStep(2);
+    };
+    window.addEventListener("message", onGetMessage);
+    return () => {
+      window.removeEventListener("message", onGetMessage);
+    };
+  }, []);
+
+  // モーダルの開閉状態とステップを監視してChrome拡張機能側に伝える
+  useEffect(() => {
+    [0, 1, 2, 3].forEach((i) =>
+      document.documentElement.classList.remove(`step-${i}`),
+    );
+    const s = isOpen ? step : 0;
+    document.documentElement.classList.add(`step-${s}`);
+  }, [isOpen, step]);
+
   // 拡張機能がインストールされているかチェック
   const checkExtensionInstalled = () => {
     return document.documentElement.classList.contains("hellooo-installed");
@@ -41,28 +61,21 @@ export default function Modal(props: ModalProps) {
         <div className="modal">
           <div className="modal__wrapper">
             <p className="modal__step">
-              {
-                <>
-                  <span
-                    className={`modal__stepNumber ${step === 1 ? "active" : ""}`}
-                    key={1}
-                  >
-                    1
-                  </span>
-                  <span
-                    className={`modal__stepNumber ${step === 2 ? "active" : ""}`}
-                    key={1}
-                  >
-                    2
-                  </span>
-                  <span
-                    className={`modal__stepNumber ${step === 3 ? "active" : ""}`}
-                    key={1}
-                  >
-                    3
-                  </span>
-                </>
-              }
+              <span
+                className={`modal__stepNumber ${step === 1 ? "active" : ""}`}
+              >
+                1
+              </span>
+              <span
+                className={`modal__stepNumber ${step === 2 ? "active" : ""}`}
+              >
+                2
+              </span>
+              <span
+                className={`modal__stepNumber ${step === 3 ? "active" : ""}`}
+              >
+                3
+              </span>
             </p>
             <p className="modal__title">
               {step === 1 && "Chrome拡張機能を追加"}

@@ -1,11 +1,15 @@
-import { Assets, Container, Graphics, Texture } from "pixi.js";
+import { Assets, Container, Graphics, Spritesheet, Texture } from "pixi.js";
 import CardBg from "./cardBg";
 import CardColumnContainer from "./cardColumnContainer";
+import { Icon } from "../../../../common/_interface";
 
 export default class CardContainer extends Container {
   resizeTimer: number = 0;
   container: Container = new Container();
   columns: CardColumnContainer[] = [];
+  icons: Icon[] = [];
+  iconSpriteSheet?: Spritesheet;
+  qrSpriteSheet?: Spritesheet;
   iconTexture?: Texture;
   qrTexture?: Texture;
 
@@ -24,6 +28,25 @@ export default class CardContainer extends Container {
     this.rotation = 15 * (Math.PI / 180);
     this._onResize();
     window.addEventListener("resize", this.onResize);
+  }
+
+  setIcons(
+    icons: Icon[],
+    iconSpriteSheet: Spritesheet,
+    qrSpriteSheet: Spritesheet,
+  ) {
+    this.icons = icons;
+    if (this.iconSpriteSheet) {
+      this.iconSpriteSheet.textureSource.destroy();
+      this.iconSpriteSheet.destroy();
+    }
+    if (this.qrSpriteSheet) {
+      this.qrSpriteSheet.textureSource.destroy();
+      this.qrSpriteSheet.destroy();
+    }
+    this.iconSpriteSheet = iconSpriteSheet;
+    this.qrSpriteSheet = qrSpriteSheet;
+    this._onResize();
   }
 
   /**
@@ -46,6 +69,7 @@ export default class CardContainer extends Container {
     while (this.columns.length != numColumns) {
       if (this.columns.length < numColumns) {
         const column = new CardColumnContainer(
+          this.columns.length,
           this.columns.length % 2 == 0 ? 1 : -1,
           this.iconTexture!,
           this.qrTexture!,
@@ -62,7 +86,12 @@ export default class CardContainer extends Container {
       }
     }
 
-    this.columns.forEach((column) => column.reset());
+    this.columns.forEach((column, i) => {
+      if (this.icons.length && this.iconSpriteSheet && this.qrSpriteSheet) {
+        column.setIcons(this.icons, this.iconSpriteSheet, this.qrSpriteSheet);
+      }
+      column.reset();
+    });
     this.x = window.innerWidth / 2 + 60;
     this.y = window.innerHeight / 2;
     this.container.y = -this.y;

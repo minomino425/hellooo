@@ -1,3 +1,10 @@
+export interface Icon {
+	account: string
+	data: string
+	url: string
+	qr?: string
+}
+
 export interface LabelTemplate {
 	id: string
 	url: string

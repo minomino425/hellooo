@@ -3,6 +3,7 @@ import CardBg from "./cardBg";
 import CardSprite from "./cardSprite";
 import CardLabelText from "./cardLabelText";
 import CardText from "./cardText";
+import { Icon } from "../../../../common/_interface";
 
 export default class Card extends Container {
   bg: CardBg = new CardBg();
@@ -16,11 +17,10 @@ export default class Card extends Container {
   /**
    * コンストラクタ
    */
-  constructor(iconTexture: Texture, qrTexture: Texture) {
+  constructor(icon: Icon | null, iconTexture: Texture, qrTexture: Texture) {
     super();
     this.icon = new CardSprite(25, 20, iconTexture);
     this.qr = new CardSprite(25, 105, qrTexture);
-    //
     this.addChild(this.bg);
     this.addChild(this.icon);
     this.addChild(this.qr);
@@ -28,9 +28,16 @@ export default class Card extends Container {
     this.addChild(this.account);
     this.addChild(this.companyLabel);
     this.addChild(this.nameLabel);
+    if (icon) {
+      this.account.setText(`@${icon.account}`);
+    }
     this.visible = false;
   }
 
+  /**
+   * 表示演出
+   * @param delay
+   */
   show(delay: number) {
     setTimeout(() => {
       this.bg.color = "orange";

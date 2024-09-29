@@ -11,6 +11,10 @@ export default class TypewriterText extends Text {
     this.__text = text;
   }
 
+  setText(text: string) {
+    this.__text = text;
+  }
+
   /**
    * 表示
    * @param text
