@@ -97,7 +97,7 @@ export default class FlipSprite extends Container {
     const minFlip = 0.5;
     gsap.to(this, {
       flipPosition: minFlip + p * (1 - minFlip),
-      duration: 1.5,
+      duration: 1.75,
       ease: "expo.out",
     });
     gsap.to(this, {
@@ -105,12 +105,6 @@ export default class FlipSprite extends Container {
       duration: 0.5,
       ease: "expo.out",
     });
-    // this.hitArea = new Rectangle(
-    //   0,
-    //   -this.sprite.height * 2,
-    //   this.sprite.width,
-    //   this.sprite.height * 3.25,
-    // );
   };
 
   onMouseOut = (e: FederatedPointerEvent) => {

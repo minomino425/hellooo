@@ -90,7 +90,7 @@ export default class Card extends Container {
     const minFlip = 0.65;
     gsap.to(this, {
       flipPosition: minFlip + p * (1 - minFlip),
-      duration: 1.5,
+      duration: 1.75,
       ease: "expo.out",
     });
     gsap.to(this, {
