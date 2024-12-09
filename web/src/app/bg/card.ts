@@ -4,15 +4,16 @@ import CardSprite from "./cardSprite";
 import CardLabelText from "./cardLabelText";
 import CardText from "./cardText";
 import { Icon } from "../../../../common/_interface";
-import CardMask from "./cardMask";
-import CardBackSide from "./cardBackSide";
+import { FlipMask } from "./flipMask";
 import gsap from "gsap";
+import { FlipBackSide } from "./flipBackSide";
 
 /**
  * カード1枚分のコンテナ
  *
  * container: Container ->  bg: CardBg 背景の角丸四角形
- *                          backSide: CardBackSide 裏面の角丸四角形
+ *                          backSide: flipBackSide
+ * 裏面の角丸四角形
  *                          containerMask: CardMask めくれるエフェクト用のマスク
  *                          icon: CardSprite アイコン画像
  *                          qr: CardSprite QRコード画像
@@ -26,8 +27,8 @@ export default class Card extends Container {
 
   transparentBg: CardBg = new CardBg();
   bg: CardBg = new CardBg();
-  backSide: CardBackSide = new CardBackSide();
-  containerMask: CardMask = new CardMask(CardBg.WIDTH, CardBg.HEIGHT);
+  backSide: FlipBackSide = new FlipBackSide(new CardBg("orange"));
+  containerMask: FlipMask = new FlipMask(CardBg.WIDTH, CardBg.HEIGHT);
   icon: CardSprite;
   qr: CardSprite;
   accountLabel: CardLabelText = new CardLabelText("X(Twitter):", 110, 25);
@@ -93,8 +94,9 @@ export default class Card extends Container {
     let a = Math.atan2(mouse.y - cy, mouse.x - cx) + Math.PI * 0;
     if (a > 0) a -= Math.PI * 2;
     const p = 1 - Math.max(0, Math.min(1, d / CardBg.WIDTH));
+    const minFlip = 0.65;
     gsap.to(this, {
-      flipPosition: 0.55 + p * 0.45,
+      flipPosition: minFlip + p * (1 - minFlip),
       flipAngle: Math.max(Math.min(a, Math.PI * -0.55), Math.PI * -0.99),
       duration: 0.75,
       ease: "expo.out",
@@ -146,6 +148,7 @@ export default class Card extends Container {
       this.companyLabel.show();
       this.nameLabel.show();
       this.update();
+      this.flipPosition = 0.85;
       this.flipAngle = Math.PI * -0.75;
       gsap.to(this, {
         flipPosition: 1,

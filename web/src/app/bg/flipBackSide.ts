@@ -1,7 +1,7 @@
 import { gsap } from "gsap";
-import { Container, Graphics, Point, Text } from "pixi.js";
+import { Container, Point } from "pixi.js";
 import CardBg from "./cardBg";
-import CardMask from "./cardMask";
+import { FlipMask } from "./flipMask";
 import Card from "./card";
 
 /**
@@ -37,11 +37,11 @@ function findPerpendicularPoint(p1: Point, p2: Point, p3: Point): Point {
   return new Point(pxProjection, pyProjection);
 }
 
-export default class CardBackSide extends Container {
+export class FlipBackSide extends Container {
   static readonly DISTANCE = Math.sqrt(CardBg.WIDTH ** 2 + CardBg.HEIGHT ** 2);
   static readonly DIAGONAL_ANGLE = Math.atan2(CardBg.HEIGHT, CardBg.WIDTH); // 対角線の角度
-  bg: CardBg = new CardBg("orange");
-  cardMask: CardMask = new CardMask(CardBg.WIDTH, CardBg.HEIGHT);
+  content: Container;
+  flipMask: FlipMask = new FlipMask(CardBg.WIDTH, CardBg.HEIGHT);
 
   protected _flipAngle: number = Math.PI * -0.5;
   protected _flipPosition: number = 0;
@@ -56,11 +56,12 @@ export default class CardBackSide extends Container {
   /**
    * コンストラクタ
    */
-  constructor() {
+  constructor(content: Container) {
     super();
-    this.addChild(this.bg);
-    this.addChild(this.cardMask);
-    this.mask = this.cardMask;
+    this.content = content;
+    this.addChild(this.content);
+    this.addChild(this.flipMask);
+    this.mask = this.flipMask;
     this.flipAngle = this._flipAngle;
     this.flipPosition = this._flipPosition;
     // Debug
@@ -81,7 +82,7 @@ export default class CardBackSide extends Container {
   }
 
   set flipAngle(angle: number) {
-    this.cardMask.flipAngle = this._flipAngle = angle;
+    this.flipMask.flipAngle = this._flipAngle = angle;
     this.reset();
   }
 
@@ -90,7 +91,7 @@ export default class CardBackSide extends Container {
   }
 
   set flipPosition(position: number) {
-    this._flipPosition = this.cardMask.flipPosition = position;
+    this._flipPosition = this.flipMask.flipPosition = position;
     this.reset();
   }
 
@@ -129,18 +130,18 @@ export default class CardBackSide extends Container {
     // this.gwh.position.set(w, h);
     // End Debug
 
-    this.bg.rotation = a2;
-    this.bg.scale.set(1, -1);
-    this.bg.pivot.set(w, h);
-    this.bg.position.set(p.x, p.y);
+    this.content.rotation = a2;
+    this.content.scale.set(1, -1);
+    this.content.pivot.set(w, h);
+    this.content.position.set(p.x, p.y);
     // 移動距離と角度を計算
     // this._moveVector.x =
-    //   Math.cos(this._flipAngle - CardBackSide.DIAGONAL_ANGLE) *
-    //     -CardBackSide.DISTANCE +
+    //   Math.cos(this._flipAngle - FlipBackSide.DIAGONAL_ANGLE) *
+    //     -FlipBackSide.DISTANCE +
     //   CardBg.WIDTH;
     // this._moveVector.y =
-    //   Math.sin(this._flipAngle - CardBackSide.DIAGONAL_ANGLE) *
-    //     -CardBackSide.DISTANCE +
+    //   Math.sin(this._flipAngle - FlipBackSide.DIAGONAL_ANGLE) *
+    //     -FlipBackSide.DISTANCE +
     //   CardBg.HEIGHT;
     // const offsetX = Math.cos(this._flipAngle + Math.PI * 0.5) * -CardBg.HEIGHT;
     // const offsetY = Math.sin(this._flipAngle + Math.PI * 0.5) * -CardBg.HEIGHT;

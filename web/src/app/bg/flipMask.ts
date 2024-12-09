@@ -2,7 +2,7 @@ import { Container, Graphics, Point, Text } from "pixi.js";
 import { gsap } from "gsap";
 import CardBg from "./cardBg";
 
-export default class CardMask extends Graphics {
+export class FlipMask extends Graphics {
   protected _width: number;
   protected _height: number;
   protected _flipAngle: number = Math.PI * -0.5;
