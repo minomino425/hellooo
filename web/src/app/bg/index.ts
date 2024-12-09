@@ -1,7 +1,7 @@
 import { Application, Spritesheet, Texture, Ticker } from "pixi.js";
-import { BladeApi, Pane } from "tweakpane";
 import CardContainer from "./cardContainer";
 import { Icon } from "../../../../common/_interface";
+import { Copy } from "./copy";
 
 export default class Bg {
   // Singleton
@@ -16,8 +16,9 @@ export default class Bg {
 
   // Instance
   app: Application;
-  pane: Pane;
+  // pane: Pane;
   cardContainer: CardContainer;
+  copy: Copy;
 
   /**
    * コンストラクタ
@@ -25,9 +26,10 @@ export default class Bg {
   constructor() {
     this.app = new Application();
     // ui
-    this.pane = new Pane();
+    // this.pane = new Pane();
 
     this.cardContainer = new CardContainer();
+    this.copy = new Copy();
     this.app
       .init({
         background: "#f5f5f5",
@@ -38,10 +40,15 @@ export default class Bg {
         powerPreference: "high-performance",
       })
       .then(async () => {
-        await this.cardContainer.init(this.app.renderer);
+        await this.copy.load();
+        await this.cardContainer.load();
         this.app.canvas.classList.add("bg");
         document.body.appendChild(this.app.canvas);
         this.app.stage.addChild(this.cardContainer);
+        this.app.stage.addChild(this.copy);
+        await this.copy.show();
+        this.cardContainer.init();
+        document.documentElement.classList.add("ready");
       });
   }
 

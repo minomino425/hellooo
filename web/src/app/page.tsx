@@ -92,13 +92,20 @@ export default function Home() {
             />
           </svg>
         </div>
-        <div className="main__copy">
-          <img src="/copy.svg" alt="copy" />
-        </div>
-        <p className="main__caption">
+        {/* <p className="main__caption">
           イベントでの繋がりを加速する、リアルとSNSをつなぐ名前シール
-        </p>
+        </p> */}
         <Button onOpen={openModal} text="さっそく作ってみる" />
+        <p className="main__credit">
+          Extension Development, Frontend Development by&nbsp;
+          <a href="https://x.com/kjkmr" target="_blank">
+            @kjkmr
+          </a>
+          , Design, Frontend Development by&nbsp;
+          <a href="https://x.com/WebMino" target="_blank">
+            @WebMino
+          </a>
+        </p>
       </div>
       <Modal isOpen={isModalOpen} onClose={closeModal} />
     </main>

@@ -1,11 +1,4 @@
-import {
-  Assets,
-  Container,
-  Graphics,
-  Renderer,
-  Spritesheet,
-  Texture,
-} from "pixi.js";
+import { Assets, Container, Graphics, Spritesheet, Texture } from "pixi.js";
 import CardBg from "./cardBg";
 import CardColumnContainer from "./cardColumnContainer";
 import { Icon } from "../../../../common/_interface";
@@ -19,7 +12,6 @@ export default class CardContainer extends Container {
   container: Container = new Container();
   columns: CardColumnContainer[] = [];
   icons: Icon[] = [];
-  renderer?: Renderer;
   iconSpriteSheet?: Spritesheet;
   qrSpriteSheet?: Spritesheet;
   iconTexture?: Texture;
@@ -37,9 +29,7 @@ export default class CardContainer extends Container {
     this.qrTexture = await Assets.load("/images/qr.png");
     this.addChild(this.container);
   }
-  async init(renderer: Renderer) {
-    await this.load();
-    this.renderer = renderer;
+  async init() {
     this.rotation = 15 * (Math.PI / 180);
     this._onResize();
     window.addEventListener("resize", this.onResize);
@@ -106,7 +96,7 @@ export default class CardContainer extends Container {
       if (this.icons.length && this.iconSpriteSheet && this.qrSpriteSheet) {
         column.setIcons(this.icons, this.iconSpriteSheet, this.qrSpriteSheet);
       }
-      column.reset(this.renderer!);
+      column.reset();
     });
     this.x = window.innerWidth / 2 + 60;
     this.y = window.innerHeight / 2;

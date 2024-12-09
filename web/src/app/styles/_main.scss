@@ -4,17 +4,40 @@
   padding: config.vunitPc(35vw) config.vunitPc(40vw) 0;
 }
 
-.main__copy {
-  width: config.vunitPc(700vw);
-  margin: config.vunitPc(80vw) 0 config.vunitPc(40vw);
-}
+// .main__caption {
+//   font-size: config.vunitPc(24vw);
+//   font-weight: 700;
+// }
 
-.main__caption {
-  font-size: config.vunitPc(24vw);
-  font-weight: 700;
+.main__credit {
+  position: fixed;
+  left: 40px;
+  bottom: 20px;
+  font-size: x-small;
+  color: #333;
+  opacity: 0.5;
+  a {
+    color: #fd5100;
+    &:hover {
+      color: #666;
+      text-decoration: underline;
+    }
+  }
 }
 
 .button {
+  opacity: 0;
+  transform: translateX(-20px);
+  .ready & {
+    transition:
+      transform 0.25s 0.75s ease-out,
+      opacity 0.15s 0.75s ease-out;
+    transform: translateX(0px);
+    opacity: 1;
+  }
+  position: fixed;
+  left: 40px;
+  top: calc(50% + 125px);
   display: inline-block;
   background-color: #fd5100;
   color: #fff;
@@ -23,7 +46,6 @@
   width: config.vunitPc(480vw);
   padding: config.vunitPc(23vw) config.vunitPc(42vw) config.vunitPc(22vw);
   margin: config.vunitPc(40vw) 0 0;
-  position: relative;
   cursor: pointer;
   &:after {
     content: "";

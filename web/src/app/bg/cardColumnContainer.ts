@@ -84,7 +84,7 @@ export default class CardColumnContainer extends Container {
   /**
    * カードを再生成
    */
-  reset = (renderer: Renderer) => {
+  reset = () => {
     this.scroll = 0;
     const wh = window.innerHeight;
 
@@ -105,8 +105,8 @@ export default class CardColumnContainer extends Container {
         this.iconTexture;
       const qrTexture =
         (icon && this.qrSpriteSheet?.textures[icon.account]) || this.qrTexture;
-      const card = new Card(icon || null, iconTexture, qrTexture, renderer);
-      const delay = (this.direction > 0 ? y : numRows - y) * 0.065;
+      const card = new Card(icon || null, iconTexture, qrTexture);
+      const delay = (this.direction > 0 ? y : numRows - y) * 0.085;
       card.show(delay);
       this.addChild(card);
       this.cards.push(card);

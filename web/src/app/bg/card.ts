@@ -1,26 +1,25 @@
-import { Container, Texture, Renderer, FederatedPointerEvent } from "pixi.js";
+import { Container, Texture, FederatedPointerEvent } from "pixi.js";
 import CardBg from "./cardBg";
 import CardSprite from "./cardSprite";
 import CardLabelText from "./cardLabelText";
 import CardText from "./cardText";
 import { Icon } from "../../../../common/_interface";
-import { FlipMask } from "./flipMask";
 import gsap from "gsap";
+import { FlipMask } from "./flipMask";
 import { FlipBackSide } from "./flipBackSide";
 
 /**
  * カード1枚分のコンテナ
  *
- * container: Container ->  bg: CardBg 背景の角丸四角形
- *                          backSide: flipBackSide
- * 裏面の角丸四角形
- *                          containerMask: CardMask めくれるエフェクト用のマスク
- *                          icon: CardSprite アイコン画像
- *                          qr: CardSprite QRコード画像
+ * container: Container ->  bg: CardBg                  背景の角丸四角形
+ *                          backSide: FlipBackSide      裏面の角丸四角形
+ *                          containerMask: FlipMask     めくれるエフェクト用のマスク
+ *                          icon: CardSprite            アイコン画像
+ *                          qr: CardSprite              QRコード画像
  *                          accountLabel: CardLabelText アカウント名ラベル
- *                          account: CardText アカウント名
+ *                          account: CardText           アカウント名
  *                          companyLabel: CardLabelText 会社名ラベル
- *                          nameLabel: CardLabelText 名前ラベル
+ *                          nameLabel: CardLabelText    名前ラベル
  */
 export default class Card extends Container {
   container: Container = new Container();
@@ -35,7 +34,6 @@ export default class Card extends Container {
   account: CardText = new CardText(110, 40);
   companyLabel: CardLabelText = new CardLabelText("Company:", 110, 25 + 53);
   nameLabel: CardLabelText = new CardLabelText("Name:", 110, 25 + 53 * 2);
-  updateRequest: number = NaN;
 
   protected _flipPosition: number = 0.75;
   protected _flipAngle: number = Math.PI * -0.25;
@@ -43,12 +41,7 @@ export default class Card extends Container {
   /**
    * コンストラクタ
    */
-  constructor(
-    icon: Icon | null,
-    iconTexture: Texture,
-    qrTexture: Texture,
-    renderer: Renderer,
-  ) {
+  constructor(icon: Icon | null, iconTexture: Texture, qrTexture: Texture) {
     super();
     this.icon = new CardSprite(25, 20, iconTexture);
     this.qr = new CardSprite(25, 105, qrTexture);
@@ -97,10 +90,13 @@ export default class Card extends Container {
     const minFlip = 0.65;
     gsap.to(this, {
       flipPosition: minFlip + p * (1 - minFlip),
-      flipAngle: Math.max(Math.min(a, Math.PI * -0.55), Math.PI * -0.99),
-      duration: 0.75,
+      duration: 1.5,
       ease: "expo.out",
-      overwrite: true,
+    });
+    gsap.to(this, {
+      flipAngle: Math.max(Math.min(a, Math.PI * -0.55), Math.PI * -0.9999),
+      duration: 0.5,
+      ease: "expo.out",
     });
   };
 
@@ -140,14 +136,12 @@ export default class Card extends Container {
    * @param delay
    */
   show(delay: number) {
-    if (this.updateRequest) window.cancelAnimationFrame(this.updateRequest);
     setTimeout(() => {
       this.visible = true;
       this.accountLabel.show();
       this.account.show();
       this.companyLabel.show();
       this.nameLabel.show();
-      this.update();
       this.flipPosition = 0.85;
       this.flipAngle = Math.PI * -0.75;
       gsap.to(this, {
@@ -158,8 +152,4 @@ export default class Card extends Container {
       });
     }, delay * 1000);
   }
-
-  update = () => {
-    this.updateRequest = window.requestAnimationFrame(this.update);
-  };
 }
