@@ -30,8 +30,8 @@
   transform: translateX(-20px);
   .ready & {
     transition:
-      transform 0.25s 0.75s ease-out,
-      opacity 0.15s 0.75s ease-out;
+      transform 0.35s 0.5s ease-out,
+      opacity 0.25s 0.5s ease-out;
     transform: translateX(0px);
     opacity: 1;
   }
@@ -57,6 +57,12 @@
     background-size: cover;
     width: config.vunitPc(32vw);
     height: config.vunitPc(15vw);
+    transition: all 0.25s ease-out;
+  }
+  &:hover {
+    &:after {
+      transform: translateX(5px) translateY(-50%);
+    }
   }
 }
 
