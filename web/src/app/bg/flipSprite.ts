@@ -80,9 +80,9 @@ export default class FlipSprite extends Container {
     this.parent.addChild(this);
     this.hitArea = new Rectangle(
       0,
-      -this.sprite.width * 2,
+      -this.sprite.width * 0.5,
       this.sprite.width,
-      this.sprite.width * 2 + this.sprite.height * 1.25,
+      this.sprite.width * 0.5 + this.sprite.height * 1.5,
     );
   };
 
@@ -129,7 +129,7 @@ export default class FlipSprite extends Container {
    * 表示演出
    * @param delay
    */
-  show(delay: number) {
+  show(delay: number, duration: number = 1.25) {
     return new Promise((resolve) => {
       // this.visible = true;
       this.flipPosition = 0.001;
@@ -138,7 +138,7 @@ export default class FlipSprite extends Container {
         visible: true,
         flipPosition: 1,
         flipAngle: Math.PI * -0.75,
-        duration: 1.25,
+        duration: duration,
         delay: delay,
         ease: "cubic.inOut",
         overwrite: true,

@@ -41,7 +41,7 @@ export class Copy extends Container {
       this.line1.show(delay),
       this.line2.show(delay + 0.225),
       this.line3.show(delay + 0.45),
-      this.line4.show(delay + 1.2),
+      this.line4.show(delay + 1.15, 0.75),
     ]);
   }
 
