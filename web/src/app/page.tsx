@@ -95,7 +95,7 @@ export default function Home() {
         {/* <p className="main__caption">
           イベントでの繋がりを加速する、リアルとSNSをつなぐ名前シール
         </p> */}
-        <Button onOpen={openModal} text="さっそく作ってみる" />
+        <Button onOpen={openModal} text="つくりかた" />
         <p className="main__credit">
           Extension Development, Frontend Development by&nbsp;
           <a href="https://x.com/kjkmr" target="_blank">
