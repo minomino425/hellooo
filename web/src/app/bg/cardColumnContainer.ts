@@ -1,8 +1,11 @@
-import { Container, Graphics, Spritesheet, Text, Texture } from "pixi.js";
+import { Container, Renderer, Spritesheet, Texture } from "pixi.js";
 import CardBg from "./cardBg";
 import Card from "./card";
 import { Icon } from "../../../../common/_interface";
 
+/**
+ * カード一列分のコンテナ
+ */
 export default class CardColumnContainer extends Container {
   cards: Card[] = [];
   index: number;
@@ -37,6 +40,7 @@ export default class CardColumnContainer extends Container {
    * 更新
    */
   update = () => {
+    // return; // TODO: デバッグ用
     this.scroll += this.scrollSpeed * this.direction;
     const margin = 10;
     const maxScroll = (CardBg.HEIGHT + margin) * this.cards.length;
@@ -80,7 +84,7 @@ export default class CardColumnContainer extends Container {
   /**
    * カードを再生成
    */
-  reset = () => {
+  reset = (renderer: Renderer) => {
     this.scroll = 0;
     const wh = window.innerHeight;
 
@@ -91,6 +95,7 @@ export default class CardColumnContainer extends Container {
     // カードを再生成
     const margin = 10;
     const numRows = Math.ceil(wh / (CardBg.HEIGHT + margin)) + 2;
+    // const numRows = 1; // TODO: デバッグ用
     const iconOffset = numRows * this.index;
 
     for (let y = 0; y < numRows; y++) {
@@ -100,8 +105,8 @@ export default class CardColumnContainer extends Container {
         this.iconTexture;
       const qrTexture =
         (icon && this.qrSpriteSheet?.textures[icon.account]) || this.qrTexture;
-      const card = new Card(icon || null, iconTexture, qrTexture);
-      const delay = (this.direction > 0 ? y : numRows - y) * 0.035;
+      const card = new Card(icon || null, iconTexture, qrTexture, renderer);
+      const delay = (this.direction > 0 ? y : numRows - y) * 0.065;
       card.show(delay);
       this.addChild(card);
       this.cards.push(card);

@@ -1,4 +1,5 @@
-import { Application, Spritesheet, Texture } from "pixi.js";
+import { Application, Spritesheet, Texture, Ticker } from "pixi.js";
+import { BladeApi, Pane } from "tweakpane";
 import CardContainer from "./cardContainer";
 import { Icon } from "../../../../common/_interface";
 
@@ -15,6 +16,7 @@ export default class Bg {
 
   // Instance
   app: Application;
+  pane: Pane;
   cardContainer: CardContainer;
 
   /**
@@ -22,14 +24,21 @@ export default class Bg {
    */
   constructor() {
     this.app = new Application();
+    // ui
+    this.pane = new Pane();
+
     this.cardContainer = new CardContainer();
     this.app
       .init({
         background: "#f5f5f5",
         resizeTo: window,
         resolution: window.devicePixelRatio || 1,
+        antialias: true,
+        preferWebGLVersion: 2,
+        powerPreference: "high-performance",
       })
-      .then(() => {
+      .then(async () => {
+        await this.cardContainer.init(this.app.renderer);
         this.app.canvas.classList.add("bg");
         document.body.appendChild(this.app.canvas);
         this.app.stage.addChild(this.cardContainer);

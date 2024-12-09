@@ -13,9 +13,9 @@ export default class CardBg extends Graphics {
   /**
    * コンストラクタ
    */
-  constructor() {
+  constructor(color: "white" | "orange" = "white") {
     super();
-    this.draw();
+    this.color = color;
   }
 
   set color(color: "white" | "orange") {
