@@ -96,7 +96,7 @@ export default class CardContainer extends Container {
       if (this.icons.length && this.iconSpriteSheet && this.qrSpriteSheet) {
         column.setIcons(this.icons, this.iconSpriteSheet, this.qrSpriteSheet);
       }
-      column.reset();
+      column.reset(i);
     });
     this.x = window.innerWidth / 2 + 60;
     this.y = window.innerHeight / 2;

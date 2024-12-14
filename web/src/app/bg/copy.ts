@@ -41,11 +41,11 @@ export class Copy extends Container {
       this.line1.show(delay),
       this.line2.show(delay + 0.225),
       this.line3.show(delay + 0.45),
-      this.line4.show(delay + 1.15, 0.75),
+      this.line4.show(delay + 0.75, 0.75),
     ]);
   }
 
   onResize = () => {
-    this.y = window.innerHeight * 0.5 - 235;
+    this.y = window.innerHeight * 0.5 - 240;
   };
 }

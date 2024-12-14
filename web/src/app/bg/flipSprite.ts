@@ -9,6 +9,14 @@ import {
 import gsap from "gsap";
 import { FlipMask } from "./flipMask";
 import { FlipBackSide } from "./flipBackSide";
+import { clear } from "console";
+
+const cubicIn = gsap.parseEase("cubic.in");
+const expoOut = gsap.parseEase("expo.out");
+
+const ease = (i: number) => {
+  return expoOut(cubicIn(i));
+};
 
 /**
  * めくれるエフェクトのコンテナ
@@ -21,6 +29,7 @@ export default class FlipSprite extends Container {
 
   protected _flipPosition: number = 0.75;
   protected _flipAngle: number = Math.PI * -0.75;
+  protected _mouseOutTimer: number = 0;
 
   /**
    * コンストラクタ
@@ -74,16 +83,22 @@ export default class FlipSprite extends Container {
    * @param e
    */
   onMouseOver = (e: FederatedPointerEvent) => {
+    if (this._mouseOutTimer) clearTimeout(this._mouseOutTimer);
     const mouse = e.getLocalPosition(this);
     // if (mouse.x < this.sprite.width * 0.5) return;
     this.on("mousemove", this.onMouseMove);
+    this.on("mousedown", this.onMouseDown);
     this.parent.addChild(this);
     this.hitArea = new Rectangle(
       0,
-      -this.sprite.width * 0.5,
+      -this.sprite.height * 0.5,
       this.sprite.width,
-      this.sprite.width * 0.5 + this.sprite.height * 1.5,
+      this.sprite.height * 2,
     );
+  };
+
+  onMouseDown = (e: FederatedPointerEvent) => {
+    this._onMouseOut(0);
   };
 
   onMouseMove = (e: FederatedPointerEvent) => {
@@ -95,29 +110,48 @@ export default class FlipSprite extends Container {
     if (a > 0) a -= Math.PI * 2;
     const p = 1 - Math.max(0, Math.min(1, d / this.sprite.width));
     const minFlip = 0.5;
+    const flipPosition = minFlip + p * (1 - minFlip);
+    const positionDiff = Math.abs(this.flipPosition - flipPosition);
     gsap.to(this, {
-      flipPosition: minFlip + p * (1 - minFlip),
-      duration: 1.75,
+      flipPosition,
+      duration: 1.25 + positionDiff * 3,
       ease: "expo.out",
     });
     gsap.to(this, {
       flipAngle: Math.max(Math.min(a, Math.PI * -0.55), Math.PI * -0.9999),
-      duration: 0.5,
+      duration: 0.5 + positionDiff * 2,
       ease: "expo.out",
     });
+    // ヒットエリア可変
+    const radianToMouse = Math.atan2(mouse.y - cy, mouse.x - cx);
+    const y =
+      Math.sin(radianToMouse) * this.sprite.width * (1 - flipPosition) * 0.75;
+    this.hitArea = new Rectangle(
+      0,
+      -this.sprite.height * 0.5 + y,
+      this.sprite.width * 1.1,
+      this.sprite.height * 1.75 - y,
+    );
   };
 
   onMouseOut = (e: FederatedPointerEvent) => {
-    this.off("mousemove", this.onMouseMove);
-    gsap.to(this, {
-      flipPosition: 1,
-      flipAngle: Math.PI * -0.75,
-      duration: 1.5,
-      ease: "expo.out",
-      overwrite: true,
-    });
-    this.hitArea = new Rectangle(0, 0, this.sprite.width, this.sprite.height);
+    this._onMouseOut();
   };
+  _onMouseOut(delay: number = 0.2) {
+    this.off("mousemove", this.onMouseMove);
+    this.off("mousedown", this.onMouseDown);
+    if (this._mouseOutTimer) clearTimeout(this._mouseOutTimer);
+    this._mouseOutTimer = window.setTimeout(() => {
+      gsap.to(this, {
+        flipPosition: 1,
+        flipAngle: Math.PI * -0.75,
+        duration: 1.0,
+        ease: ease,
+        overwrite: true,
+      });
+    }, delay * 1000);
+    this.hitArea = new Rectangle(0, 0, this.sprite.width, this.sprite.height);
+  }
 
   /**
    * 表示演出
@@ -134,7 +168,7 @@ export default class FlipSprite extends Container {
         flipAngle: Math.PI * -0.75,
         duration: duration,
         delay: delay,
-        ease: "cubic.inOut",
+        ease: ease,
         overwrite: true,
         onComplete: resolve,
       });

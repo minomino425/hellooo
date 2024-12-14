@@ -8,6 +8,12 @@ import gsap from "gsap";
 import { FlipMask } from "./flipMask";
 import { FlipBackSide } from "./flipBackSide";
 
+const cubicIn = gsap.parseEase("cubic.in");
+const expoOut = gsap.parseEase("expo.out");
+
+const ease = (i: number) => {
+  return expoOut(cubicIn(i));
+};
 /**
  * カード1枚分のコンテナ
  *
@@ -37,6 +43,7 @@ export default class Card extends Container {
 
   protected _flipPosition: number = 0.75;
   protected _flipAngle: number = Math.PI * -0.25;
+  protected _mouseOutTimer: number = 0;
 
   /**
    * コンストラクタ
@@ -74,6 +81,7 @@ export default class Card extends Container {
    * @param e
    */
   onMouseOver = (e: FederatedPointerEvent) => {
+    if (this._mouseOutTimer) window.clearTimeout(this._mouseOutTimer);
     this.on("mousemove", this.onMouseMove);
     this.parent.addChild(this);
   };
@@ -90,7 +98,7 @@ export default class Card extends Container {
     const minFlip = 0.65;
     gsap.to(this, {
       flipPosition: minFlip + p * (1 - minFlip),
-      duration: 1.75,
+      duration: 1.25,
       ease: "expo.out",
     });
     gsap.to(this, {
@@ -102,13 +110,16 @@ export default class Card extends Container {
 
   onMouseOut = (e: FederatedPointerEvent) => {
     this.off("mousemove", this.onMouseMove);
-    gsap.to(this, {
-      flipPosition: 1,
-      flipAngle: Math.PI * -0.75,
-      duration: 1.0,
-      ease: "expo.out",
-      overwrite: true,
-    });
+    if (this._mouseOutTimer) window.clearTimeout(this._mouseOutTimer);
+    this._mouseOutTimer = window.setTimeout(() => {
+      gsap.to(this, {
+        flipPosition: 1,
+        flipAngle: Math.PI * -0.75,
+        duration: 1.0,
+        ease: ease,
+        overwrite: true,
+      });
+    }, 200);
   };
 
   get flipPosition() {
@@ -144,10 +155,22 @@ export default class Card extends Container {
       this.nameLabel.show();
       this.flipPosition = 0.85;
       this.flipAngle = Math.PI * -0.75;
+      gsap.fromTo(
+        this.position,
+        {
+          x: -40,
+        },
+        {
+          x: 0,
+          duration: 0.25,
+          ease: "expo.out",
+        },
+      );
       gsap.to(this, {
         flipPosition: 1,
-        duration: 1.5,
-        ease: "expo.inOut",
+        flipAngle: Math.PI * -0.75,
+        duration: 1,
+        ease: ease,
         overwrite: true,
       });
     }, delay * 1000);

@@ -30,28 +30,31 @@
   transform: translateX(-20px);
   .ready & {
     transition:
-      transform 0.35s 0.5s ease-out,
-      opacity 0.25s 0.5s ease-out;
+      transform 0.75s 1.6s cubic-bezier(0.19, 1, 0.22, 1),
+      opacity 0.25s 1.6s ease-out;
     transform: translateX(0px);
     opacity: 1;
   }
   position: fixed;
   left: 40px;
-  top: calc(50% + 125px);
+  top: calc(50% + 150px);
   display: inline-block;
+
   background-color: #fd5100;
   color: #fff;
+  // color: #fd5100;
+  // border: 4px solid #fd5100;
+  // background-color: #fff;
   border-radius: 20px;
   transition: background-color 0.3s;
-  width: config.vunitPc(480vw);
-  padding: config.vunitPc(23vw) config.vunitPc(42vw) config.vunitPc(22vw);
-  margin: config.vunitPc(40vw) 0 0;
+  width: 480px;
+  padding: 15px 15px;
   cursor: pointer;
   &:after {
     content: "";
     position: absolute;
     top: 50%;
-    right: 12%;
+    right: 40px;
     transform: translateY(-50%);
     background-image: url("/arrow.svg");
     background-size: cover;
@@ -67,9 +70,9 @@
 }
 
 .button__text {
-  font-size: config.vunitPc(24vw);
-  padding: config.vunitPc(10vw) config.vunitPc(20vw);
-  font-weight: 700;
+  font-size: 22px;
+  padding: 10px 20px;
+  font-weight: 600;
   text-align: left;
 }
 

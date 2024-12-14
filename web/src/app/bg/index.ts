@@ -46,9 +46,9 @@ export default class Bg {
         document.body.appendChild(this.app.canvas);
         this.app.stage.addChild(this.cardContainer);
         this.app.stage.addChild(this.copy);
+        document.documentElement.classList.add("ready");
         await this.copy.show();
         this.cardContainer.init();
-        document.documentElement.classList.add("ready");
       });
   }
 
