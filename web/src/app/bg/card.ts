@@ -94,15 +94,16 @@ export default class Card extends Container {
     const d = Math.sqrt((cx - mouse.x) ** 2 + (cy - mouse.y) ** 2);
     let a = Math.atan2(mouse.y - cy, mouse.x - cx) + Math.PI * 0;
     if (a > 0) a -= Math.PI * 2;
-    const p = 1 - Math.max(0, Math.min(1, d / CardBg.WIDTH));
-    const minFlip = 0.65;
+    const minFlip = 0.75;
+    const p =
+      1 - Math.max(0, Math.min(1, d / (CardBg.WIDTH * (1 - minFlip) * 2)));
     gsap.to(this, {
       flipPosition: minFlip + p * (1 - minFlip),
       duration: 1.25,
       ease: "expo.out",
     });
     gsap.to(this, {
-      flipAngle: Math.max(Math.min(a, Math.PI * -0.55), Math.PI * -0.9999),
+      flipAngle: Math.max(Math.min(a, Math.PI * -0.55), Math.PI * -0.85),
       duration: 0.5,
       ease: "expo.out",
     });

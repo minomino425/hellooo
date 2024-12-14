@@ -108,8 +108,9 @@ export default class FlipSprite extends Container {
     const d = Math.sqrt((cx - mouse.x) ** 2 + (cy - mouse.y) ** 2);
     let a = Math.atan2(mouse.y - cy, mouse.x - cx) + Math.PI * 0;
     if (a > 0) a -= Math.PI * 2;
-    const p = 1 - Math.max(0, Math.min(1, d / this.sprite.width));
     const minFlip = 0.5;
+    const p =
+      1 - Math.max(0, Math.min(1, (d / (this.sprite.width * minFlip)) * 0.5));
     const flipPosition = minFlip + p * (1 - minFlip);
     const positionDiff = Math.abs(this.flipPosition - flipPosition);
     gsap.to(this, {

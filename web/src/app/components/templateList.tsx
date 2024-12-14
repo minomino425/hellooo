@@ -2,19 +2,23 @@ import React, { useEffect, useState } from "react";
 import { Templates } from "../../../../common";
 import TemplateOption from "./templateOptoin";
 
-type TemplateListProps = {};
+type TemplateListProps = {
+  templateId: string | null;
+  onSelect: (id: string | null) => void;
+};
 
 export default function TemplateList(props: TemplateListProps) {
   // 開閉
   const [isOpen, setIsOpen] = useState(false);
   // 選択中のテンプレートID
   const [selectedTemplateId, setSelectedTemplateId] = useState<string | null>(
-    Templates[0]!.id,
+    props.templateId || Templates[0]!.id,
   );
 
   // テンプレート選択時にChrome拡張機能側に通知
   useEffect(() => {
-    window.postMessage({ type: "selectTemplate", selectedTemplateId }, "*");
+    props.onSelect(selectedTemplateId);
+    // window.postMessage({ type: "selectTemplate", selectedTemplateId }, "*");
   }, [selectedTemplateId]);
 
   const onSelect = (id: string) => {
