@@ -60,6 +60,13 @@ export default class Bg {
   }
 
   /**
+   * 完了メッセージ表示
+   */
+  showThanks() {
+    this.copy.showThanks();
+  }
+
+  /**
    * アイコンデータをセット
    * @param icons
    */

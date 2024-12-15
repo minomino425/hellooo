@@ -13,7 +13,7 @@ export default function Home() {
   const dropAreaRef = useRef<HTMLElement>(null);
   const [step, setStep] = useState(1);
   const [accountText, setAccountText] = useState<string>(
-    "@hellooo_card\n@casestudy_info\n@kjkmr\n@WebMino",
+    "@hellooo_cards\n@casestudy_info\n@kjkmr\n@WebMino",
   );
 
   // Bg初期化
@@ -81,6 +81,7 @@ export default function Home() {
         console.log("endCreatePdf");
         setIsModalOpen(false);
         bg.default.getInstance().setIcons(event.data.icons);
+        bg.default.getInstance().showThanks();
       }
     };
     window.addEventListener("message", onGetMessage);
@@ -156,6 +157,11 @@ export default function Home() {
           <a href="https://x.com/WebMino" target="_blank">
             @WebMino
           </a>
+          &nbsp;/ This service is originally made for&nbsp;
+          <a href="https://x.com/casestudy_info" target="_blank">
+            @casestudy_info
+          </a>
+          .
         </p>
       </div>
       <Modal

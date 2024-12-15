@@ -26,6 +26,7 @@ export default class FlipSprite extends Container {
   sprite: Sprite;
   backSide: FlipBackSide;
   containerMask: FlipMask;
+  maxHeight?: number;
 
   protected _flipPosition: number = 0.75;
   protected _flipAngle: number = Math.PI * -0.75;
@@ -34,8 +35,9 @@ export default class FlipSprite extends Container {
   /**
    * コンストラクタ
    */
-  constructor(texture: Texture, resolution: number = 2) {
+  constructor(texture: Texture, maxHeight?: number, resolution: number = 2) {
     super();
+    this.maxHeight = maxHeight;
     this.sprite = new Sprite(texture);
     this.sprite.scale.set(1 / resolution, 1 / resolution);
     this.sprite.tint = 0x000000;
@@ -53,7 +55,12 @@ export default class FlipSprite extends Container {
     this.flipAngle = this._flipAngle;
     this.flipPosition = this._flipPosition;
     this.interactive = true;
-    this.hitArea = new Rectangle(0, 0, this.sprite.width, this.sprite.height);
+    this.hitArea = new Rectangle(
+      0,
+      0,
+      this.sprite.width,
+      Math.min(this.sprite.height, this.maxHeight || 9999),
+    );
     this.on("mouseover", this.onMouseOver);
     this.on("mouseout", this.onMouseOut);
   }
@@ -89,12 +96,8 @@ export default class FlipSprite extends Container {
     this.on("mousemove", this.onMouseMove);
     this.on("mousedown", this.onMouseDown);
     this.parent.addChild(this);
-    this.hitArea = new Rectangle(
-      -40,
-      -this.sprite.height * 0.5,
-      this.sprite.width,
-      this.sprite.height * 2,
-    );
+    const h = Math.min(this.sprite.height, this.maxHeight || 9999);
+    this.hitArea = new Rectangle(-40, -h * 0.5, this.sprite.width, h * 2);
   };
 
   onMouseDown = (e: FederatedPointerEvent) => {
@@ -127,11 +130,12 @@ export default class FlipSprite extends Container {
     const radianToMouse = Math.atan2(mouse.y - cy, mouse.x - cx);
     const y =
       Math.sin(radianToMouse) * this.sprite.width * (1 - flipPosition) * 0.75;
+    const h = Math.min(this.sprite.height, this.maxHeight || 9999);
     this.hitArea = new Rectangle(
       -40,
-      -this.sprite.height * 0.5 + y,
+      -h * 0.5 + y,
       this.sprite.width * 1.1,
-      this.sprite.height * 1.75 - y,
+      h * 1.75 - y,
     );
   };
 
@@ -151,7 +155,12 @@ export default class FlipSprite extends Container {
         overwrite: true,
       });
     }, delay * 1000);
-    this.hitArea = new Rectangle(0, 0, this.sprite.width, this.sprite.height);
+    this.hitArea = new Rectangle(
+      0,
+      0,
+      this.sprite.width,
+      Math.min(this.sprite.height, this.maxHeight || 9999),
+    );
   }
 
   /**
