@@ -3,37 +3,23 @@
 import React, { SyntheticEvent, useEffect, useRef, useState } from "react";
 import TemplateList from "./templateList";
 import "@/styles/_modal.scss";
-import { text } from "stream/consumers";
 
 interface ModalProps {
   isOpen: boolean;
+  accountText: string;
+  setAccountText: (text: string) => void;
+  step: number;
+  setStep: (step: number) => void;
   onClose?: () => void;
 }
 
 export default function Modal(props: ModalProps) {
-  const { isOpen, onClose } = props;
-  const [step, setStep] = useState(1);
+  const { isOpen, accountText, setAccountText, onClose, step, setStep } = props;
   const [templateId, setTemplateId] = useState<string | null>(null);
-  const [accountText, setAccountText] = useState<string>(
-    "@hellooo_card\n@casestudy_info\n@kjkmr\n@WebMino",
-  );
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
-  // window.postMessageを受け取って、ステップを進める
+  // ステップ3の時にテキストエリアにフォーカス
   useEffect(() => {
-    const onGetMessage = (event: MessageEvent) => {
-      if (event.data.type == "openStep" && event.data.step === 2) setStep(2);
-    };
-    window.addEventListener("message", onGetMessage);
-    return () => {
-      window.removeEventListener("message", onGetMessage);
-    };
-  }, []);
-
-  // モーダルの開閉状態とステップを監視してChrome拡張機能側に伝える
-  useEffect(() => {
-    const s = isOpen ? step : 0;
-    window.postMessage({ type: "step", step: s }, "*");
     if (step == 3 && textareaRef.current) {
       textareaRef.current.focus();
       textareaRef.current.select();
@@ -47,16 +33,14 @@ export default function Modal(props: ModalProps) {
 
   // インストール済みの場合はステップ2に進む
   useEffect(() => {
-    if (checkExtensionInstalled()) setStep(2);
+    if (checkExtensionInstalled() && step == 1) setStep(2);
   }, [isOpen]);
 
   // テキストエリアの設定
   useEffect(() => {
     if (!textareaRef.current) return;
-    console.log(textareaRef.current);
     textareaRef.current.addEventListener("focus", () => {
       if (!textareaRef.current) return;
-      console.log(textareaRef.current);
       // テキストエリアの内容を全選択
       textareaRef.current.select();
     });
@@ -80,6 +64,16 @@ export default function Modal(props: ModalProps) {
       setStep(1);
       return;
     }
+    if (!templateId) {
+      alert("用紙を選択してください。");
+      setStep(2);
+      return;
+    }
+    window.postMessage({
+      type: "create",
+      accounts: accountText.split("\n"),
+      selectedTemplateId: templateId,
+    });
   };
 
   /**

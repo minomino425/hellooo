@@ -1,19 +1,62 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Button from "@/components/button.tsx";
 import Modal from "@/components/Modal";
 import "@/styles/_base.scss";
 import "@/styles/_main.scss";
+import { getAccountLists } from "./components/utils";
 
 const bg = require("@/bg");
 
 export default function Home() {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const dropAreaRef = useRef<HTMLElement>(null);
+  const [step, setStep] = useState(1);
+  const [accountText, setAccountText] = useState<string>(
+    "@hellooo_card\n@casestudy_info\n@kjkmr\n@WebMino",
+  );
 
   // Bg初期化
   useEffect(() => {
     bg.default.init();
   }, []);
+
+  // ドラッグ&ドロップ初期化
+  useEffect(() => {
+    const dropArea = dropAreaRef.current;
+    console.log(dropArea);
+    if (!dropArea) return;
+
+    const onDragOver = (event: DragEvent) => {
+      event.preventDefault();
+      dropArea.classList.add("dragover");
+    };
+
+    const onDragLeave = (event: DragEvent) => {
+      dropArea.classList.remove("dragover");
+    };
+
+    const onDrop = async (event: DragEvent) => {
+      dropArea.classList.remove("dragover");
+      event.preventDefault();
+      if (!event.dataTransfer) {
+        alert(
+          "Xのアカウントリストのテキストファイルをドラッグ＆ドロップしてください。",
+        );
+        return;
+      }
+      // アカウントリスト取得
+      const accountLists = await getAccountLists(event.dataTransfer.items);
+      setAccountText(accountLists.join("\n"));
+      setStep(3);
+      setIsModalOpen(true);
+    };
+
+    dropArea.addEventListener("drop", onDrop, false);
+    dropArea.addEventListener("dragover", onDragOver, false);
+    dropArea.addEventListener("dragend", onDragLeave);
+    dropArea.addEventListener("dragleave", onDragLeave);
+  }, [dropAreaRef.current]);
 
   // window.postMessageを受け取って、モーダルを開く
   useEffect(() => {
@@ -42,7 +85,7 @@ export default function Home() {
   const closeModal = () => setIsModalOpen(false);
 
   return (
-    <main id="drop-area">
+    <main id="drop-area" ref={dropAreaRef}>
       <div className="main__wrapper">
         <div className="main__logo">
           <svg
@@ -107,7 +150,14 @@ export default function Home() {
           </a>
         </p>
       </div>
-      <Modal isOpen={isModalOpen} onClose={closeModal} />
+      <Modal
+        isOpen={isModalOpen}
+        onClose={closeModal}
+        step={step}
+        setStep={setStep}
+        accountText={accountText}
+        setAccountText={setAccountText}
+      />
     </main>
   );
 }

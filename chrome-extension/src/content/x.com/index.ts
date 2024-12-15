@@ -25,9 +25,9 @@ export class XApp {
 			if (Date.now() - this.startedOn < 5000) {
 				window.requestAnimationFrame(this.check);
 			} else {
-				console.warn('Icon not found');
+				// console.warn('Icon not found');
 				chrome.runtime.sendMessage({ iconUrl: '', account });
 			}
 		}
-	}
+	};
 }

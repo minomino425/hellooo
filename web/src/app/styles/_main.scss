@@ -80,6 +80,11 @@
 // drop-area
 //--------------------------------------------------
 #drop-area {
+  position: absolute;
+  width: 100vw;
+  height: 100vh;
+  left: 0;
+  top: 0;
   &:after {
     content: "";
     display: block;

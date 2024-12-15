@@ -90,7 +90,7 @@ export default class FlipSprite extends Container {
     this.on("mousedown", this.onMouseDown);
     this.parent.addChild(this);
     this.hitArea = new Rectangle(
-      0,
+      -40,
       -this.sprite.height * 0.5,
       this.sprite.width,
       this.sprite.height * 2,
@@ -128,7 +128,7 @@ export default class FlipSprite extends Container {
     const y =
       Math.sin(radianToMouse) * this.sprite.width * (1 - flipPosition) * 0.75;
     this.hitArea = new Rectangle(
-      0,
+      -40,
       -this.sprite.height * 0.5 + y,
       this.sprite.width * 1.1,
       this.sprite.height * 1.75 - y,
