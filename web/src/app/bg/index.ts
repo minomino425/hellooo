@@ -53,6 +53,13 @@ export default class Bg {
   }
 
   /**
+   * インタラクティブモード
+   */
+  setInteractive(interactive: boolean) {
+    this.app.stage.interactiveChildren = interactive;
+  }
+
+  /**
    * アイコンデータをセット
    * @param icons
    */

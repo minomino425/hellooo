@@ -20,11 +20,13 @@ export default function Home() {
   useEffect(() => {
     bg.default.init();
   }, []);
+  useEffect(() => {
+    bg.default.getInstance().setInteractive(!isModalOpen);
+  }, [isModalOpen]);
 
   // ドラッグ&ドロップ初期化
   useEffect(() => {
     const dropArea = dropAreaRef.current;
-    console.log(dropArea);
     if (!dropArea) return;
 
     const onDragOver = (event: DragEvent) => {
@@ -56,6 +58,12 @@ export default function Home() {
     dropArea.addEventListener("dragover", onDragOver, false);
     dropArea.addEventListener("dragend", onDragLeave);
     dropArea.addEventListener("dragleave", onDragLeave);
+    return () => {
+      dropArea.removeEventListener("drop", onDrop);
+      dropArea.removeEventListener("dragover", onDragOver);
+      dropArea.removeEventListener("dragend", onDragLeave);
+      dropArea.removeEventListener("dragleave", onDragLeave);
+    };
   }, [dropAreaRef.current]);
 
   // window.postMessageを受け取って、モーダルを開く
