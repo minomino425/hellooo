@@ -15,7 +15,7 @@ interface ModalProps {
 
 export default function Modal(props: ModalProps) {
   const { isOpen, accountText, setAccountText, onClose, step, setStep } = props;
-  const [templateId, setTemplateId] = useState<string | null>(null);
+  const [templateId, setTemplateId] = useState<string | null>("");
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   // ステップ3の時にテキストエリアにフォーカス
@@ -82,12 +82,6 @@ export default function Modal(props: ModalProps) {
    */
   const handleSelectTemplate = (id: string | null) => {
     setTemplateId(id);
-    if (id) {
-      window.postMessage(
-        { type: "selectTemplate", selectedTemplateId: id },
-        "*",
-      );
-    }
   };
 
   /**

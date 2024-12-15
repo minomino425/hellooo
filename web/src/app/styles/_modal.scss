@@ -226,12 +226,23 @@
   }
   &__model {
     text-align: left;
+    font-size: 18px;
+  }
+  &__note-selected {
+    padding-left: 10px;
+    text-align: left;
     font-size: 16px;
   }
-  &__amazon {
-    text-align: left;
-    color: #666;
+  &__spec {
     font-size: 75%;
+    color: #666;
+  }
+  &__link {
+    text-align: left;
+    font-size: 75%;
+    a {
+      color: #666;
+    }
   }
   a {
     &:hover {

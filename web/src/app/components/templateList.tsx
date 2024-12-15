@@ -12,7 +12,7 @@ export default function TemplateList(props: TemplateListProps) {
   const [isOpen, setIsOpen] = useState(false);
   // 選択中のテンプレートID
   const [selectedTemplateId, setSelectedTemplateId] = useState<string | null>(
-    props.templateId || Templates[0]!.id,
+    props.templateId || "",
   );
 
   // テンプレート選択時にChrome拡張機能側に通知
@@ -32,6 +32,12 @@ export default function TemplateList(props: TemplateListProps) {
 
   return (
     <ul className={`template-list ${isOpen ? "open" : ""}`}>
+      {(isOpen || selectedTemplateId == "") && (
+        <TemplateOption
+          selected={selectedTemplateId == ""}
+          onSelect={onSelect}
+        />
+      )}
       {Templates.map((template, i) => {
         if (!isOpen && template.id != selectedTemplateId) {
           return null;
