@@ -200,21 +200,17 @@ export default function Modal(props: ModalProps) {
 
   return (
     <>
-      {isOpen && (
-        <>
-          <div className="modal">
-            <div className="modal__bg" onClick={onClose}></div>
-            <div className="modal__wrapper">
-              {stepNav()}
-              <div className="modal__content">
-                {step === 1 && step1()}
-                {step === 2 && step2()}
-                {step === 3 && step3()}
-              </div>
-            </div>
+      <div className={`modal ${isOpen ? "open" : ""}`}>
+        <div className="modal__bg" onClick={onClose}></div>
+        <div className="modal__wrapper">
+          {stepNav()}
+          <div className="modal__content">
+            {step === 1 && step1()}
+            {step === 2 && step2()}
+            {step === 3 && step3()}
           </div>
-        </>
-      )}
+        </div>
+      </div>
     </>
   );
 }

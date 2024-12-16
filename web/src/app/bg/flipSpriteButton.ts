@@ -37,8 +37,7 @@ class ButtonLayout extends Container {
     gsap.to(this.arrowSprite, {
       x: 0,
       duration: 0.5,
-      delay: 0.5,
-      ease: "cubic.inOut",
+      ease: "cubic.out",
     });
   }
 }
@@ -130,6 +129,8 @@ export default class FlipSpriteButton extends FlipSprite {
   protected override _onMouseOut() {
     super._onMouseOut();
     if (this._mouseOutFadeTimer) window.clearTimeout(this._mouseOutFadeTimer);
+    this.normal.mouseOut();
+    this.hover.mouseOut();
     this._mouseOutFadeTimer = window.setTimeout(() => {
       this.normal.visible = true;
       this.normal.alpha = 1;
@@ -140,7 +141,5 @@ export default class FlipSpriteButton extends FlipSprite {
         ease: "expo.inOut",
       });
     }, 0.5 * 1000);
-    this.normal.mouseOut();
-    this.hover.mouseOut();
   }
 }
