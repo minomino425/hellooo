@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { Noto_Sans_JP, Roboto } from "next/font/google";
 import "@/styles/_base.scss";
@@ -14,9 +14,17 @@ export default function RootLayout({
   return (
     <html lang="ja">
       <head>
+        <meta property="og:title" content="Hellooo.cards" />
+        <meta
+          property="og:description"
+          content="リアルとSNSをつなぐ名前シール"
+        />
+        <meta property="og:image" content="/images/og-image.png" />
+        <meta property="og:url" content="https://www.hellooo.cards/" />
         <style jsx global>{`
           html {
-            font-family: ${roboto.style.fontFamily}, ${notoSansJp.style.fontFamily};
+            font-family: ${roboto.style.fontFamily},
+              ${notoSansJp.style.fontFamily};
           }
         `}</style>
       </head>
