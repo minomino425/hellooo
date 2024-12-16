@@ -32,7 +32,7 @@ export default function Modal(props: ModalProps) {
     setIsExtensionInstalled(
       window.document.documentElement.classList.contains("hellooo-installed"),
     );
-  }, []);
+  }, [isOpen]);
 
   // インストール済みの場合はステップ2に進む
   useEffect(() => {

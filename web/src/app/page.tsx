@@ -21,7 +21,6 @@ export default function Home() {
   useEffect(() => {
     setSpLayout(isSpLayout());
     setPcChrome(isPcChrome());
-    if (window !== undefined) return;
     Bg.init();
     Bg.getInstance().on("create-button-click", openModal);
     return () => {
@@ -31,7 +30,6 @@ export default function Home() {
 
   // モーダル開閉時に背景のインタラクションを切り替え
   useEffect(() => {
-    if (window !== undefined) return;
     Bg.getInstance().setInteractive(!isModalOpen);
   }, [isModalOpen]);
 
