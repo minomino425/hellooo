@@ -3,6 +3,7 @@ import gsap from "gsap";
 import { FlipMask } from "./flipMask";
 import { FlipBackSide } from "./flipBackSide";
 import FlipSprite from "./flipSprite";
+import FlipSpriteButton from "./flipSpriteButton";
 
 /**
  * コピーのコンテナ
@@ -20,6 +21,8 @@ export class Copy extends Container {
   thanksLine4?: FlipSprite;
   thanksContainer: Container = new Container();
 
+  button?: FlipSpriteButton;
+
   async load() {
     const l1 = await Assets.load("/images/copy-connect.png");
     const l2 = await Assets.load("/images/copy-everyone.png");
@@ -29,6 +32,9 @@ export class Copy extends Container {
     const t2 = await Assets.load("/images/copy-thankyou2.png");
     const t3 = await Assets.load("/images/copy-thankyou3.png");
     const t4 = await Assets.load("/images/copy-thankyou4.png");
+    const b = await Assets.load("/images/create-button-bg.png");
+    const bh = await Assets.load("/images/create-button-text.png");
+    const ba = await Assets.load("/images/create-button-arrow.png");
     this.line1 = new FlipSprite(l1, 96);
     this.line2 = new FlipSprite(l2, 96);
     this.line3 = new FlipSprite(l3, 96);
@@ -51,13 +57,27 @@ export class Copy extends Container {
     this.thanksContainer.addChild(this.thanksLine2);
     this.thanksContainer.addChild(this.thanksLine3);
     this.thanksContainer.addChild(this.thanksLine4);
+    this.button = new FlipSpriteButton(b, bh, ba);
+    this.button.position.set(0, 400);
+    this.button.on("mousedown", () => {
+      console.log("create-button-click");
+      this.emit("create-button-click");
+    });
+    this.addChild(this.button);
     this.x = 40;
     window.addEventListener("resize", this.onResize);
     this.onResize();
   }
 
   async show() {
-    if (!this.line1 || !this.line2 || !this.line3 || !this.line4) return;
+    if (
+      !this.line1 ||
+      !this.line2 ||
+      !this.line3 ||
+      !this.line4 ||
+      !this.button
+    )
+      return;
     this.addChild(this.container);
     const delay = 0.25;
     await Promise.all([
@@ -65,6 +85,7 @@ export class Copy extends Container {
       this.line2.show(delay + 0.225),
       this.line3.show(delay + 0.45),
       this.line4.show(delay + 0.75, 0.75),
+      this.button.show(delay + 0.9, 0.75),
     ]);
   }
 

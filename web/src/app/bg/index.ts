@@ -2,8 +2,9 @@ import { Application, Spritesheet, Texture, Ticker } from "pixi.js";
 import CardContainer from "./cardContainer";
 import { Icon } from "../../../../common/_interface";
 import { Copy } from "./copy";
+import EventEmitter from "events";
 
-export default class Bg {
+export default class Bg extends EventEmitter {
   // Singleton
   static instance: Bg;
   static init() {
@@ -24,12 +25,16 @@ export default class Bg {
    * コンストラクタ
    */
   constructor() {
+    super();
     this.app = new Application();
     // ui
     // this.pane = new Pane();
 
     this.cardContainer = new CardContainer();
     this.copy = new Copy();
+    this.copy.on("create-button-click", () => {
+      this.emit("create-button-click");
+    });
     this.app
       .init({
         background: "#f5f5f5",

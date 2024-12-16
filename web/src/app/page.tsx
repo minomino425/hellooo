@@ -19,6 +19,10 @@ export default function Home() {
   // Bg初期化
   useEffect(() => {
     bg.default.init();
+    bg.default.getInstance().on("create-button-click", openModal);
+    return () => {
+      bg.default.getInstance().removeAllListeners("create-button-click");
+    };
   }, []);
   useEffect(() => {
     bg.default.getInstance().setInteractive(!isModalOpen);
@@ -30,7 +34,7 @@ export default function Home() {
     if (!dropArea) return;
 
     const onDragOver = (event: DragEvent) => {
-      event.preventDefault();
+      // event.preventDefault();
       dropArea.classList.add("dragover");
     };
 
@@ -147,7 +151,7 @@ export default function Home() {
         {/* <p className="main__caption">
           イベントでの繋がりを加速する、リアルとSNSをつなぐ名前シール
         </p> */}
-        <Button onOpen={openModal} text="つくりかた" />
+        {/* <Button onOpen={openModal} text="つくりかた" /> */}
         <p className="main__credit">
           Extension Development, Frontend Development by&nbsp;
           <a href="https://x.com/kjkmr" target="_blank">

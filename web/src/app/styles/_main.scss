@@ -63,6 +63,7 @@
     transition: all 0.25s ease-out;
   }
   &:hover {
+    background-color: #000;
     &:after {
       transform: translateX(5px) translateY(-50%);
     }
@@ -81,6 +82,7 @@
 //--------------------------------------------------
 #drop-area {
   position: absolute;
+  pointer-events: none;
   width: 100vw;
   height: 100vh;
   left: 0;
