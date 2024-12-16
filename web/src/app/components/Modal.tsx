@@ -174,7 +174,7 @@ export default function Modal(props: ModalProps) {
           <li
             className={`modal__navItem ${step === 1 ? "active" : ""} ${checkExtensionInstalled() ? "done" : ""}`}
           >
-            <a href="#" onClick={() => setStep(1)}>
+            <a onClick={() => setStep(1)}>
               <span>1</span>
               拡張機能
             </a>
@@ -182,13 +182,13 @@ export default function Modal(props: ModalProps) {
           <li
             className={`modal__navItem ${step === 2 ? "active" : ""} ${templateId ? "done" : ""}`}
           >
-            <a href="#" onClick={() => setStep(2)}>
+            <a onClick={() => setStep(2)}>
               <span>2</span>
               用紙選択
             </a>
           </li>
           <li className={`modal__navItem ${step === 3 ? "active" : ""}`}>
-            <a href="#" onClick={() => setStep(3)}>
+            <a onClick={() => setStep(3)}>
               <span>3</span>
               Xアカウント
             </a>
