@@ -4,7 +4,7 @@ import Button from "@/components/button.tsx";
 import Modal from "@/components/Modal";
 import "@/styles/_base.scss";
 import "@/styles/_main.scss";
-import { getAccountLists } from "./components/utils";
+import { getAccountLists, isPcChrome, isSpLayout } from "./components/utils";
 
 const bg = require("@/bg");
 
@@ -149,10 +149,22 @@ export default function Home() {
               />
             </svg>
           </div>
-          {/* <p className="main__caption">
-          イベントでの繋がりを加速する、リアルとSNSをつなぐ名前シール
-        </p> */}
-          {/* <Button onOpen={openModal} text="つくりかた" /> */}
+          {isSpLayout() ? (
+            <p className="main__sp-message">
+              このサービスはPCのブラウザでご利用ください。
+            </p>
+          ) : !isPcChrome() ? (
+            <p className="main__chrome-message">
+              お使いのブラウザではこのサービスはご利用いただけません。
+              <br />
+              <a href="https://www.google.com/intl/ja/chrome/" target="_blank">
+                Google Chrome
+              </a>
+              でご利用ください。
+            </p>
+          ) : (
+            <></>
+          )}
         </div>
       </main>
       <p className="main__credit">

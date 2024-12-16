@@ -4,6 +4,7 @@ import { FlipMask } from "./flipMask";
 import { FlipBackSide } from "./flipBackSide";
 import FlipSprite from "./flipSprite";
 import FlipSpriteButton from "./flipSpriteButton";
+import { isPcChrome } from "@/components/utils";
 
 /**
  * コピーのコンテナ
@@ -63,7 +64,7 @@ export class Copy extends Container {
       console.log("create-button-click");
       this.emit("create-button-click");
     });
-    this.addChild(this.button);
+    if (isPcChrome()) this.addChild(this.button);
     this.x = 40;
     window.addEventListener("resize", this.onResize);
     this.onResize();
@@ -109,6 +110,8 @@ export class Copy extends Container {
   }
 
   onResize = () => {
-    this.y = window.innerHeight * 0.5 - 240;
+    const s = Math.min(1, window.innerWidth / 900);
+    this.y = window.innerHeight * 0.5 - 240 * s;
+    this.scale.set(s, s);
   };
 }

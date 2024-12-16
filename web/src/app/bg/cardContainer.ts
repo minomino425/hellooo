@@ -2,6 +2,7 @@ import { Assets, Container, Graphics, Spritesheet, Texture } from "pixi.js";
 import CardBg from "./cardBg";
 import CardColumnContainer from "./cardColumnContainer";
 import { Icon } from "../../../../common/_interface";
+import { isPcChrome, isSpLayout } from "@/components/utils";
 
 /**
  * カード全体のコンテナ
@@ -69,7 +70,8 @@ export default class CardContainer extends Container {
     const ww = window.innerWidth;
     const wh = window.innerHeight;
     const margin = 10;
-    const numColumns = Math.ceil(ww / 2 / (CardBg.WIDTH + margin));
+    const areaRatio = isSpLayout() ? 1 : 0.5;
+    const numColumns = Math.ceil((ww * areaRatio) / (CardBg.WIDTH + margin));
 
     while (this.columns.length != numColumns) {
       if (this.columns.length < numColumns) {
@@ -98,7 +100,10 @@ export default class CardContainer extends Container {
       }
       column.reset(i);
     });
-    this.x = window.innerWidth / 2 + 60;
+    this.x = window.innerWidth * (1 - areaRatio) + 60;
+    if (isSpLayout()) this.x -= window.innerWidth * 0.5;
+    // else this.x += 60;
+
     this.y = window.innerHeight / 2;
     this.container.y = -this.y;
   };
