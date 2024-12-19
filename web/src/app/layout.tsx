@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { Noto_Sans_JP, Roboto } from "next/font/google";
 import "@/styles/_base.scss";
@@ -16,9 +16,23 @@ export default function RootLayout({
       <head>
         <style jsx global>{`
           html {
-            font-family: ${roboto.style.fontFamily}, ${notoSansJp.style.fontFamily};
+            font-family: ${roboto.style.fontFamily},
+              ${notoSansJp.style.fontFamily};
           }
         `}</style>
+        <script
+          async
+          src="https://www.googletagmanager.com/gtag/js?id=G-K4PLVVEK9B"
+        ></script>
+        <script>
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+
+            gtag('config', 'G-K4PLVVEK9B');
+          `}
+        </script>
       </head>
       <body>{children}</body>
     </html>
