@@ -17,7 +17,7 @@ export default function RootLayout({
         <meta property="og:title" content="Hellooo.cards" />
         <meta
           property="og:description"
-          content="リアルとSNSをつなぐ名前シール"
+          content="イベントでの繋がりを加速する、リアルとSNSをつなぐ名前シール"
         />
         <meta property="og:image" content="/images/og-image.png" />
         <meta property="og:url" content="https://www.hellooo.cards/" />
