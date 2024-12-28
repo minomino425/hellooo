@@ -51,9 +51,12 @@ export default class App {
 		const accountNames: string[] = [];
 		accounts.map((account) => {
 			let a = account;
-			if (a.match(/^@/)) a = a.slice(1);
-			if (a.match(/https?:\/\//)) a = a.replace(/https?:\/\/[^\/]+\/([^\/]+)/, '$1');
-			if (a.match(/^ *$/)) return;
+			if (a !== '@') {
+				// @のみの場合は空シールとして扱う
+				if (a.match(/^@/)) a = a.slice(1);
+				if (a.match(/https?:\/\//)) a = a.replace(/https?:\/\/[^\/]+\/([^\/]+)/, '$1');
+				if (a.match(/^ *$/)) return;
+			}
 			accountNames.push(a);
 		});
 
@@ -73,7 +76,7 @@ export default class App {
 		});
 		const errorAccounts: string[] = [];
 		const filtered = icons.filter((icon) => {
-			if (icon.data === '') {
+			if (icon.account != '' && icon.data === '') {
 				errorAccounts.push(icon.account);
 				return false;
 			}

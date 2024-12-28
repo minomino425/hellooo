@@ -64,38 +64,47 @@ export default class Pdf {
 		const textHeight = template.card.textHeight || 15;
 
 		// image
-		const format = this.#getImageFormat(icon);
-		const iconData = icon.data;
-		doc.addImage(
-			iconData,
-			format,
-			x + paddingLeft,
-			y + paddingTop,
-			template.card.iconSize,
-			template.card.iconSize
-		);
+		if (icon.data) {
+			const format = this.#getImageFormat(icon);
+			const iconData = icon.data;
+			doc.addImage(
+				iconData,
+				format,
+				x + paddingLeft,
+				y + paddingTop,
+				template.card.iconSize,
+				template.card.iconSize
+			);
+		}
 		// qr
-		this.#qr.set({ value: `https://x.com/${account}` });
-		const qr = this.#qr.toDataURL('image/png');
-		icon.qr = qr;
-		doc.addImage(
-			qr,
-			'image/png',
-			x + paddingLeft,
-			y + template.card.iconSize + paddingTop + iconMarginBottom,
-			template.card.qrSize,
-			template.card.qrSize
-		);
+		if (account) {
+			this.#qr.set({ value: `https://x.com/${account}` });
+			const qr = this.#qr.toDataURL('image/png');
+			icon.qr = qr;
+			doc.addImage(
+				qr,
+				'image/png',
+				x + paddingLeft,
+				y + template.card.iconSize + paddingTop + iconMarginBottom,
+				template.card.qrSize,
+				template.card.qrSize
+			);
+		}
 		// text
-		const marginLeft = paddingLeft + template.card.iconSize + (template.card.iconMarginRight || 6);
+		const marginLeft = account
+			? paddingLeft + template.card.iconSize + (template.card.iconMarginRight || 6)
+			: paddingLeft;
+
 		const marginTop = paddingTop + 2;
 		doc.setFontSize(5);
 		doc.text('X (Twitter):', x + marginLeft, y + 0 + marginTop);
 		doc.text('Company:', x + marginLeft, y + textHeight + marginTop);
 		doc.text('Name:', x + marginLeft, y + textHeight * 2 + marginTop);
-		doc.setFontSize(12);
-		doc.text('@' + account, x + marginLeft, y + 6 + marginTop);
-		// self.drawString((10 + template.card.iconSize) * mm, (CARD_HEIGHT - 6.5) * mm, '@' + account, 12)
+		if (account) {
+			doc.setFontSize(12);
+			doc.text('@' + account, x + marginLeft, y + 6 + marginTop);
+			// self.drawString((10 + template.card.iconSize) * mm, (CARD_HEIGHT - 6.5) * mm, '@' + account, 12)
+		}
 	}
 
 	#getImageFormat(icon: Icon) {

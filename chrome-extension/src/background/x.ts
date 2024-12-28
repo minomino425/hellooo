@@ -29,6 +29,15 @@ export async function getXIcons(accounts: string[]) {
 	}[] = [];
 	for (let i = 0; i < accounts.length; i++) {
 		const account = accounts[i];
+		// @のみの場合は空シールとして扱う
+		if (account === '@') {
+			icons.push({
+				account: '',
+				url: '',
+				data: '',
+			});
+			continue;
+		}
 		// タブを開く
 		const tab = await new Promise<chrome.tabs.Tab>((resolve) =>
 			chrome.tabs.create({ url: `https://x.com/${account}` }, (tab) => resolve(tab))
