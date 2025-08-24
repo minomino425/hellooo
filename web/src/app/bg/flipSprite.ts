@@ -47,7 +47,7 @@ export default class FlipSprite extends Container {
     this.sprite.tint = 0x000000;
     const backsideSprite = new Sprite(texture);
     backsideSprite.scale.set(1 / resolution, 1 / resolution);
-    backsideSprite.tint = 0xfd5100;
+    backsideSprite.tint = 0xfd5100; // ここで裏面の色指定
     this.backSide = new FlipBackSide(backsideSprite);
     const w = texture.width / resolution;
     const h = texture.height / resolution;

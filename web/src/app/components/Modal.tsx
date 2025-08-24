@@ -10,6 +10,10 @@ interface ModalProps {
   setIsOpen: (isOpen: boolean) => void;
   accountText: string;
   setAccountText: (text: string) => void;
+  field1Text: string;
+  setField1Text: (text: string) => void;
+  field2Text: string;
+  setField2Text: (text: string) => void;
   step: number;
   setStep: (step: number) => void;
   onClose?: () => void;
@@ -21,6 +25,10 @@ export default function Modal(props: ModalProps) {
     setIsOpen,
     accountText,
     setAccountText,
+    field1Text,
+    setField1Text,
+    field2Text,
+    setField2Text,
     onClose,
     step,
     setStep,
@@ -29,6 +37,8 @@ export default function Modal(props: ModalProps) {
   const [isExtensionInstalled, setIsExtensionInstalled] = useState(false);
   const dropAreaRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const textField1Ref = useRef<HTMLInputElement>(null);
+  const textField2Ref = useRef<HTMLInputElement>(null);
 
   // ドラッグ&ドロップ初期化
   useEffect(() => {
@@ -114,6 +124,18 @@ export default function Modal(props: ModalProps) {
     if (!textareaRef.current) return;
     const text = textareaRef.current.value;
     setAccountText(text);
+  };
+
+  const onField1Change = (event: SyntheticEvent) => {
+    if (!textField1Ref.current) return;
+    const text = textField1Ref.current.value;
+    setField1Text(text);
+  };
+
+  const onField2Change = (event: SyntheticEvent) => {
+    if (!textField2Ref.current) return;
+    const text = textField2Ref.current.value;
+    setField2Text(text);
   };
 
   /**
@@ -215,11 +237,33 @@ export default function Modal(props: ModalProps) {
   const step3 = () => {
     return (
       <div className="modal__step3">
-        <textarea
-          ref={textareaRef}
-          onChange={onTextAreaChange}
-          value={accountText}
-        />
+        <div className="modal__step3__form">
+          <textarea
+            ref={textareaRef}
+            onChange={onTextAreaChange}
+            value={accountText}
+          />
+          <div className="modal__step3__customize">
+            <label>手書きフィールド名1</label>
+            <input
+              type="text"
+              maxLength={20}
+              onChange={onField1Change}
+              ref={textField1Ref}
+              value={field1Text}
+            />
+            <label>
+              手書きフィールド名2
+              <input
+                type="text"
+                maxLength={20}
+                onChange={onField2Change}
+                ref={textField2Ref}
+                value={field2Text}
+              />
+            </label>
+          </div>
+        </div>
         <div>
           <p className="modal__text">
             シールを作成するアカウントのリスト（1行に1アカウント）を入力するか、テキストファイルをドラッグ&ドロップしてください。

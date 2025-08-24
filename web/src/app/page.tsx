@@ -20,6 +20,8 @@ export default function Home() {
   const [accountText, setAccountText] = useState<string>(
     "@kjkmr\n@WebMino\n@casestudy_info\n@a_saya_108\n@bxoxnx\n@tomonorix0805\n@oniguili\n@design30m\n@soundkitchen\n@akihirofujiwara\n@ToteWebdesign\n@MEFILAS_tamo2\n@free__age",
   );
+  const [field1Text, setField1Text] = useState<string>("Company");
+  const [field2Text, setField2Text] = useState<string>("Name");
 
   // 初期化
   useEffect(() => {
@@ -57,7 +59,7 @@ export default function Home() {
       } else if (event.data.type == "endCreatePdf") {
         console.log("endCreatePdf");
         setIsModalOpen(false);
-        // downloadJson(event.data.icons, "icons.json");
+        downloadJson(event.data.icons, "icons.json");
         Bg.getInstance().setIcons(event.data.icons);
         Bg.getInstance().showThanks();
       }
@@ -168,6 +170,10 @@ export default function Home() {
         setStep={setStep}
         accountText={accountText}
         setAccountText={setAccountText}
+        field1Text={field1Text}
+        setField1Text={setField1Text}
+        field2Text={field2Text}
+        setField2Text={setField2Text}
       />
     </>
   );

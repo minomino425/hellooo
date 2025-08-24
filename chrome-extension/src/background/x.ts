@@ -1,3 +1,5 @@
+import { set } from 'lodash-es';
+
 /**
  * getImageAsBase64
  * @param url
@@ -51,6 +53,11 @@ export async function getXIcons(accounts: string[]) {
 				}
 			};
 			chrome.runtime.onMessage.addListener(onComplete);
+			// 6秒経っても取得できなかった場合は空文字を返す
+			setTimeout(() => {
+				chrome.runtime.onMessage.removeListener(onComplete);
+				resolve('');
+			}, 6000);
 		});
 		icons.push({
 			account,

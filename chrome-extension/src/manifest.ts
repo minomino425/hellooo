@@ -25,7 +25,7 @@ const manifest = defineManifest(async (env) => ({
 			js: ['content/index.ts'],
 		},
 	],
-	host_permissions: ['*://x.com/*', '*://twitter.com/*'],
+	host_permissions: ['*://x.com/*', '*://*.x.com/*', '*://*.twimg.com/*', '*://twitter.com/*'],
 	options_ui: {},
 	web_accessible_resources: [
 		{
