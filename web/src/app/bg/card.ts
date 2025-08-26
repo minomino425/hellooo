@@ -3,6 +3,7 @@ import CardBg from "./cardBg";
 import CardSprite from "./cardSprite";
 import CardLabelText from "./cardLabelText";
 import CardText from "./cardText";
+import HandwritingSprite from "./handwritingSprite";
 import { Icon } from "../../../../common/_interface";
 import gsap from "gsap";
 import { FlipMask } from "./flipMask";
@@ -37,6 +38,7 @@ export default class Card extends Container {
   containerMask: FlipMask = new FlipMask(CardBg.WIDTH, CardBg.HEIGHT);
   icon: CardSprite;
   qr: CardSprite;
+  handwriting?: HandwritingSprite;
   accountLabel: CardLabelText = new CardLabelText("X(Twitter):", 110, 25);
   account: CardText = new CardText(110, 40);
   companyLabel: CardLabelText = new CardLabelText("Company:", 110, 25 + 53);
@@ -49,11 +51,21 @@ export default class Card extends Container {
   /**
    * コンストラクタ
    */
-  constructor(icon: Icon | null, iconTexture: Texture, qrTexture: Texture) {
+  constructor(
+    icon: Icon | null,
+    iconTexture: Texture,
+    qrTexture: Texture,
+    handwritingTexture?: Texture,
+  ) {
     super();
     this.data = icon;
     this.icon = new CardSprite(25, 20, iconTexture);
     this.qr = new CardSprite(25, 105, qrTexture);
+
+    // handwritingがある場合のみ作成
+    if (handwritingTexture) {
+      this.handwriting = new HandwritingSprite(handwritingTexture);
+    }
     this.transparentBg.alpha = 0;
     this.container.addChild(this.bg);
     this.container.addChild(this.icon);
@@ -62,6 +74,12 @@ export default class Card extends Container {
     this.container.addChild(this.account);
     this.container.addChild(this.companyLabel);
     this.container.addChild(this.nameLabel);
+
+    // handwritingを最前面に追加
+    if (this.handwriting) {
+      this.container.addChild(this.handwriting);
+    }
+
     if (icon) {
       this.account.setText(`@${icon.account}`);
     }

@@ -15,11 +15,14 @@ try {
 
 // Configuration
 const ICON_SIZE = 140; // 70 * 2 (retina)
+const HANDWRITING_WIDTH = 700; // 350 * 2 (カード幅のretina)
+const HANDWRITING_HEIGHT = 394; // 197 * 2 (カード高さのretina)
 const PADDING = 2;
-const MAX_TEXTURE_SIZE = 2048;
+const MAX_TEXTURE_SIZE = 4096; // 大きな画像に対応するため増加
 
 const iconDir = path.join(__dirname, '../public/images/icons');
 const qrDir = path.join(__dirname, '../public/images/qr');
+const handwritingsDir = path.join(__dirname, '../public/images/handwritings');
 const outputDir = path.join(__dirname, '../public/images/sprites');
 const outputJsonPath = path.join(__dirname, '../src/app/bg/spritesheet-data.json');
 
@@ -35,20 +38,20 @@ if (!fs.existsSync(outputDir)) {
 /**
  * Calculate optimal grid size
  */
-function calculateGridSize(numImages) {
+function calculateGridSize(numImages, imageWidth = ICON_SIZE, imageHeight = ICON_SIZE) {
   const cols = Math.ceil(Math.sqrt(numImages));
   const rows = Math.ceil(numImages / cols);
   
-  const width = cols * (ICON_SIZE + PADDING);
-  const height = rows * (ICON_SIZE + PADDING);
+  const width = cols * (imageWidth + PADDING);
+  const height = rows * (imageHeight + PADDING);
   
   if (width > MAX_TEXTURE_SIZE || height > MAX_TEXTURE_SIZE) {
-    const maxCols = Math.floor(MAX_TEXTURE_SIZE / (ICON_SIZE + PADDING));
+    const maxCols = Math.floor(MAX_TEXTURE_SIZE / (imageWidth + PADDING));
     return {
       cols: maxCols,
       rows: Math.ceil(numImages / maxCols),
-      width: maxCols * (ICON_SIZE + PADDING) - PADDING,
-      height: Math.ceil(numImages / maxCols) * (ICON_SIZE + PADDING) - PADDING
+      width: maxCols * (imageWidth + PADDING) - PADDING,
+      height: Math.ceil(numImages / maxCols) * (imageHeight + PADDING) - PADDING
     };
   }
   
@@ -74,7 +77,16 @@ async function createSpritesheet(imageDir, outputName, type) {
   // Get image files
   const files = fs.readdirSync(imageDir)
     .filter(file => /\.(jpg|jpeg|png)$/i.test(file))
-    .sort();
+    .sort((a, b) => {
+      // For handwriting files (numeric names), sort numerically
+      const aNum = parseInt(a.replace(/\.(jpg|jpeg|png)$/i, ''));
+      const bNum = parseInt(b.replace(/\.(jpg|jpeg|png)$/i, ''));
+      if (!isNaN(aNum) && !isNaN(bNum)) {
+        return aNum - bNum;
+      }
+      // Otherwise, sort alphabetically
+      return a.localeCompare(b);
+    });
   
   if (files.length === 0) {
     console.log(`  ${type}画像が見つかりません`);
@@ -83,8 +95,13 @@ async function createSpritesheet(imageDir, outputName, type) {
   
   console.log(`  ${files.length}個の画像を処理`);
   
+  // Determine image size based on type
+  const isHandwriting = type === 'Handwritings';
+  const imageWidth = isHandwriting ? HANDWRITING_WIDTH : ICON_SIZE;
+  const imageHeight = isHandwriting ? HANDWRITING_HEIGHT : ICON_SIZE;
+  
   // Calculate grid size
-  const layout = calculateGridSize(files.length);
+  const layout = calculateGridSize(files.length, imageWidth, imageHeight);
   console.log(`  レイアウト: ${layout.cols}×${layout.rows} (${layout.width}×${layout.height}px)`);
   
   // Create canvas
@@ -111,19 +128,19 @@ async function createSpritesheet(imageDir, outputName, type) {
       // Calculate position
       const col = i % layout.cols;
       const row = Math.floor(i / layout.cols);
-      const x = col * (ICON_SIZE + PADDING);
-      const y = row * (ICON_SIZE + PADDING);
+      const x = col * (imageWidth + PADDING);
+      const y = row * (imageHeight + PADDING);
       
       // Draw image on canvas
-      ctx.drawImage(image, x, y, ICON_SIZE, ICON_SIZE);
+      ctx.drawImage(image, x, y, imageWidth, imageHeight);
       
       // Store frame data
       frames[accountName] = {
-        frame: { x, y, w: ICON_SIZE, h: ICON_SIZE },
+        frame: { x, y, w: imageWidth, h: imageHeight },
         rotated: false,
         trimmed: false,
-        spriteSourceSize: { x: 0, y: 0, w: ICON_SIZE, h: ICON_SIZE },
-        sourceSize: { w: ICON_SIZE, h: ICON_SIZE }
+        spriteSourceSize: { x: 0, y: 0, w: imageWidth, h: imageHeight },
+        sourceSize: { w: imageWidth, h: imageHeight }
       };
       
       process.stdout.write(`✓`);
@@ -204,6 +221,17 @@ function cleanupFiles() {
     });
   }
   
+  // Delete individual handwriting files
+  if (fs.existsSync(handwritingsDir)) {
+    const handwritingFiles = fs.readdirSync(handwritingsDir);
+    handwritingFiles.forEach(file => {
+      if (/\.(jpg|jpeg|png|webp)$/i.test(file)) {
+        fs.unlinkSync(path.join(handwritingsDir, file));
+        deletedCount++;
+      }
+    });
+  }
+  
   // Delete old unified spritesheet if exists
   const oldUnifiedFiles = ['all-sprites.png', 'all-sprites.webp'];
   oldUnifiedFiles.forEach(file => {
@@ -230,10 +258,14 @@ async function main() {
     // Create QR spritesheet
     const qrData = await createSpritesheet(qrDir, 'qr-sprite', 'QR');
     
+    // Create handwritings spritesheet
+    const handwritingsData = await createSpritesheet(handwritingsDir, 'handwritings-sprite', 'Handwritings');
+    
     // Save metadata JSON
     const metadata = {
       icons: iconData,
-      qr: qrData
+      qr: qrData,
+      handwritings: handwritingsData
     };
     
     fs.writeFileSync(outputJsonPath, JSON.stringify(metadata, null, 2));
@@ -264,6 +296,14 @@ async function main() {
       }
     }
     
+    if (handwritingsData) {
+      const handwritingsWebpPath = path.join(outputDir, 'handwritings-sprite.webp');
+      if (fs.existsSync(handwritingsWebpPath)) {
+        totalSize += fs.statSync(handwritingsWebpPath).size;
+        fileCount++;
+      }
+    }
+    
     // Summary
     console.log('\n========================================');
     console.log('✅ 個別スプライトシート生成完了！\n');
@@ -281,11 +321,17 @@ async function main() {
         console.log(`  - qr-sprite.webp: ${(fs.statSync(qrWebpPath).size / 1024).toFixed(1)}KB`);
       }
     }
+    if (handwritingsData) {
+      const handwritingsWebpPath = path.join(outputDir, 'handwritings-sprite.webp');
+      if (fs.existsSync(handwritingsWebpPath)) {
+        console.log(`  - handwritings-sprite.webp: ${(fs.statSync(handwritingsWebpPath).size / 1024).toFixed(1)}KB`);
+      }
+    }
     console.log(`  - 合計: ${(totalSize / 1024).toFixed(1)}KB（${fileCount}ファイル）\n`);
     
     console.log(`🚀 効果:`);
-    console.log(`  - HTTPリクエスト: 25回 → 2回（92%削減）`);
-    console.log(`  - アイコンとQRを独立管理`);
+    console.log(`  - HTTPリクエスト: 38回 → 3回（92%削減）`);
+    console.log(`  - アイコン、QR、Handwritingsを独立管理`);
     console.log(`  - 柔軟な読み込み制御\n`);
     
     if (!shouldCleanup) {

@@ -15,6 +15,7 @@ export default class CardContainer extends Container {
   icons: Icon[] = [];
   iconSpriteSheet?: Spritesheet;
   qrSpriteSheet?: Spritesheet;
+  handwritingsSpriteSheet?: Spritesheet;
   iconTexture?: Texture;
   qrTexture?: Texture;
 
@@ -39,6 +40,7 @@ export default class CardContainer extends Container {
     icons: Icon[],
     iconSpriteSheet: Spritesheet,
     qrSpriteSheet: Spritesheet,
+    handwritingsSpriteSheet?: Spritesheet,
   ) {
     this.rotation = 15 * (Math.PI / 180);
     this.icons = icons;
@@ -50,8 +52,13 @@ export default class CardContainer extends Container {
       this.qrSpriteSheet.textureSource.destroy();
       this.qrSpriteSheet.destroy();
     }
+    if (this.handwritingsSpriteSheet) {
+      this.handwritingsSpriteSheet.textureSource.destroy();
+      this.handwritingsSpriteSheet.destroy();
+    }
     this.iconSpriteSheet = iconSpriteSheet;
     this.qrSpriteSheet = qrSpriteSheet;
+    this.handwritingsSpriteSheet = handwritingsSpriteSheet;
     this._onResize();
   }
 
@@ -96,7 +103,7 @@ export default class CardContainer extends Container {
 
     this.columns.forEach((column, i) => {
       if (this.icons.length && this.iconSpriteSheet && this.qrSpriteSheet) {
-        column.setIcons(this.icons, this.iconSpriteSheet, this.qrSpriteSheet);
+        column.setIcons(this.icons, this.iconSpriteSheet, this.qrSpriteSheet, this.handwritingsSpriteSheet);
       }
       column.reset(i);
     });

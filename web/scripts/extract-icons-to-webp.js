@@ -7,7 +7,9 @@ const path = require('path');
 const iconsFilePath = path.join(__dirname, '../src/app/bg/icons.backup.ts');
 const outputDir = path.join(__dirname, '../public/images/icons');
 const outputQrDir = path.join(__dirname, '../public/images/qr');
+const outputHandwritingsDir = path.join(__dirname, '../public/images/handwritings');
 const outputJsonPath = path.join(__dirname, '../src/app/bg/icons-data.json');
+const handwritingsSourceDir = path.join(__dirname, '../src/app/bg/handwritings');
 
 // 出力ディレクトリを作成
 if (!fs.existsSync(outputDir)) {
@@ -15,6 +17,9 @@ if (!fs.existsSync(outputDir)) {
 }
 if (!fs.existsSync(outputQrDir)) {
   fs.mkdirSync(outputQrDir, { recursive: true });
+}
+if (!fs.existsSync(outputHandwritingsDir)) {
+  fs.mkdirSync(outputHandwritingsDir, { recursive: true });
 }
 
 // icons.tsファイルを読み込み
@@ -105,6 +110,33 @@ iconsArray.forEach((icon, index) => {
     errorCount++;
   }
 });
+
+// handwritings画像をコピー
+console.log('\nhandwritings画像をコピー中...');
+if (fs.existsSync(handwritingsSourceDir)) {
+  const handwritingFiles = fs.readdirSync(handwritingsSourceDir)
+    .filter(file => file.endsWith('.png'))
+    .sort((a, b) => {
+      const numA = parseInt(a.replace('.png', ''));
+      const numB = parseInt(b.replace('.png', ''));
+      return numA - numB;
+    });
+  
+  handwritingFiles.forEach((file, index) => {
+    const sourcePath = path.join(handwritingsSourceDir, file);
+    const destPath = path.join(outputHandwritingsDir, file);
+    fs.copyFileSync(sourcePath, destPath);
+    console.log(`✓ handwriting画像をコピー: ${file}`);
+    
+    // icons-data.jsonに追加
+    const iconIndex = parseInt(file.replace('.png', '')) - 1;
+    if (newIconsData[iconIndex]) {
+      newIconsData[iconIndex].handwritingPath = `/images/handwritings/${file}`;
+    }
+  });
+} else {
+  console.log('handwritingsディレクトリが見つかりません');
+}
 
 // JSONファイルとして保存
 fs.writeFileSync(outputJsonPath, JSON.stringify(newIconsData, null, 2));
