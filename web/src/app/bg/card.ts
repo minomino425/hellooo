@@ -93,7 +93,7 @@ export default class Card extends Container {
   onMouseOver = (e: FederatedPointerEvent) => {
     if (this._mouseOutTimer) window.clearTimeout(this._mouseOutTimer);
     this.on("mousemove", this.onMouseMove);
-    this.parent.addChild(this);
+    if (this.parent) this.parent.addChild(this);
   };
 
   onMouseMove = (e: FederatedPointerEvent) => {
@@ -109,7 +109,7 @@ export default class Card extends Container {
     gsap.to(this, {
       flipPosition: minFlip + p * (1 - minFlip),
       flipAngle: Math.max(Math.min(a, Math.PI * -0.55), Math.PI * -0.95),
-      duration: 0.5,
+      duration: 0.25,
       ease: "cubic.out",
       overwrite: true,
     });
@@ -123,7 +123,7 @@ export default class Card extends Container {
         flipPosition: 1,
         flipAngle: Math.PI * -0.75,
         duration: 1.0,
-        ease: ease,
+        ease,
         overwrite: true,
       });
     }, 50);

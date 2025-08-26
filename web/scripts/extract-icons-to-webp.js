@@ -3,8 +3,8 @@
 const fs = require('fs');
 const path = require('path');
 
-// icons.tsファイルのパスを設定
-const iconsFilePath = path.join(__dirname, '../src/app/bg/icons.ts');
+// icons.tsファイルのパスを設定（バックアップファイルから読み込む）
+const iconsFilePath = path.join(__dirname, '../src/app/bg/icons.backup.ts');
 const outputDir = path.join(__dirname, '../public/images/icons');
 const outputQrDir = path.join(__dirname, '../public/images/qr');
 const outputJsonPath = path.join(__dirname, '../src/app/bg/icons-data.json');

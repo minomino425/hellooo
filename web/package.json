@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "sprites": "node scripts/extract-icons-to-webp.js && node scripts/convert-to-webp.js && node scripts/create-unified-spritesheet.js --cleanup"
+    "sprites": "node scripts/extract-icons-to-webp.js && node scripts/convert-to-webp.js && node scripts/create-separate-spritesheets.js --cleanup"
   },
   "dependencies": {
     "gsap": "^3.12.5",
