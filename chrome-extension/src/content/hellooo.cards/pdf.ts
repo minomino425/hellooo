@@ -1,5 +1,4 @@
 import { jsPDF } from 'jspdf';
-//@ts-ignore
 import QRious from 'qrious';
 import { Icon, LabelTemplate } from '../../../../common/_interface';
 
@@ -13,7 +12,7 @@ export default class Pdf {
 	 * createPdf
 	 * @param icons
 	 */
-	async create(icons: Icon[], template: LabelTemplate) {
+	async create(icons: Icon[], template: LabelTemplate, field1Text: string, field2Text: string) {
 		const doc = new jsPDF({ unit: 'mm', format: 'a4', orientation: 'portrait' });
 		const numCardsPerPage = template.page.numCardsX * template.page.numCardsY;
 		for (let i = 0; i < icons.length / numCardsPerPage; i++) {
@@ -21,7 +20,9 @@ export default class Pdf {
 			await this.#createPage(
 				doc,
 				icons.slice(i * numCardsPerPage, (i + 1) * numCardsPerPage),
-				template
+				template,
+				field1Text,
+				field2Text
 			);
 		}
 		doc.save('hellooo.pdf');
@@ -32,9 +33,15 @@ export default class Pdf {
 	 * @param doc
 	 * @param icons
 	 */
-	async #createPage(doc: jsPDF, icons: Icon[], template: LabelTemplate) {
+	async #createPage(
+		doc: jsPDF,
+		icons: Icon[],
+		template: LabelTemplate,
+		field1Text: string,
+		field2Text: string
+	) {
 		for (let i = 0; i < icons.length; i++) {
-			await this.#createCard(doc, icons[i], i, template);
+			await this.#createCard(doc, icons[i], i, template, field1Text, field2Text);
 		}
 	}
 
@@ -44,7 +51,14 @@ export default class Pdf {
 	 * @param icon
 	 * @param index
 	 */
-	async #createCard(doc: jsPDF, icon: Icon, index: number, template: LabelTemplate) {
+	async #createCard(
+		doc: jsPDF,
+		icon: Icon,
+		index: number,
+		template: LabelTemplate,
+		field1Text: string,
+		field2Text: string
+	) {
 		doc.setFontSize(12);
 		const account = icon.account;
 		const numColumns = template.page.numCardsX;
@@ -98,8 +112,8 @@ export default class Pdf {
 		const marginTop = paddingTop + 2;
 		doc.setFontSize(5);
 		doc.text('X (Twitter):', x + marginLeft, y + 0 + marginTop);
-		doc.text('Company:', x + marginLeft, y + textHeight + marginTop);
-		doc.text('Name:', x + marginLeft, y + textHeight * 2 + marginTop);
+		doc.text(field1Text + ':', x + marginLeft, y + textHeight + marginTop);
+		doc.text(field2Text + ':', x + marginLeft, y + textHeight * 2 + marginTop);
 		if (account) {
 			doc.setFontSize(12);
 			doc.text('@' + account, x + marginLeft, y + 6 + marginTop);

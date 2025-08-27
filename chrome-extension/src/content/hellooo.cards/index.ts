@@ -1,4 +1,3 @@
-import { getFilesRecursive } from './utils';
 import Pdf from './pdf';
 import { Icon, LabelTemplate } from '../../../../common/_interface';
 import { Templates } from '../../../../common';
@@ -6,6 +5,8 @@ import { Templates } from '../../../../common';
 export default class App {
 	#pdf: Pdf;
 	#accounts: string[] = [];
+	#field1Text = 'Company';
+	#field2Text = 'Name';
 	#selectedTemplate: LabelTemplate | undefined = undefined;
 
 	constructor() {
@@ -25,6 +26,8 @@ export default class App {
 			) {
 				this.#selectedTemplate = Templates.getById(event.data.selectedTemplateId);
 				this.#accounts = event.data.accounts;
+				this.#field1Text = event.data.field1Text || 'Company';
+				this.#field2Text = event.data.field2Text || 'Name';
 				this.#getIconsAndCreatePdf();
 			}
 		});
@@ -33,11 +36,12 @@ export default class App {
 	// await this.#getIconsAndCreatePdf();
 
 	#getIconsAndCreatePdf = async () => {
+		if (!this.#selectedTemplate) return;
 		const icons = await this.#getIcons(this.#accounts);
 		if (icons !== false) {
 			if (!confirm('PDFをダウンロードします。')) return false;
 			window.postMessage({ type: 'startCreatePdf' }, '*');
-			await this.#pdf.create(icons, this.#selectedTemplate!);
+			await this.#pdf.create(icons, this.#selectedTemplate, this.#field1Text, this.#field2Text);
 			window.postMessage({ type: 'endCreatePdf', icons }, '*');
 		}
 	};
@@ -54,14 +58,16 @@ export default class App {
 			if (a !== '@') {
 				// @のみの場合は空シールとして扱う
 				if (a.match(/^@/)) a = a.slice(1);
-				if (a.match(/https?:\/\//)) a = a.replace(/https?:\/\/[^\/]+\/([^\/]+)/, '$1');
+				if (a.match(/https?:\/\//)) a = a.replace(/https?:\/\/[^/]+\/([^/]+)/, '$1');
 				if (a.match(/^ *$/)) return;
 			}
 			accountNames.push(a);
 		});
 
 		if (
-			!confirm('X（Twitter）のアイコンを取得するため、リスト内のアカウントのページを開きます。')
+			!confirm(
+				'X（Twitter）のアイコンを取得するため、リスト内の全アカウントのページをタブで開きます。'
+			)
 		) {
 			return false;
 		}
