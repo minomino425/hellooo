@@ -141,7 +141,7 @@ export default class FlipSprite extends Container {
     gsap.to(this, {
       flipPosition,
       flipAngle,
-      duration: 0.25 + positionDiff * 0.5,
+      duration: 0.25 + positionDiff * 1,
       ease: "cubic.out",
       overwrite: true,
     });

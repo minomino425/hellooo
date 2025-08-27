@@ -155,6 +155,8 @@ export default function Modal(props: ModalProps) {
     window.postMessage({
       type: "create",
       accounts: accountText.split("\n"),
+      field1Text,
+      field2Text,
       selectedTemplateId: templateId,
     });
   };
@@ -266,7 +268,7 @@ export default function Modal(props: ModalProps) {
         </div>
         <div>
           <p className="modal__text">
-            シールを作成するアカウントのリスト（1行に1アカウント）を入力するか、テキストファイルをドラッグ&ドロップしてください。
+            1行に1アカウントのリストを入力するか、テキストファイルをドラッグ&ドロップしてください。
           </p>
           <button className="modal__button" onClick={handleCreate}>
             作成開始！

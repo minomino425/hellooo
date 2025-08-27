@@ -60,7 +60,7 @@ export class Bg extends EventEmitter {
         this.app.stage.addChild(this.copy);
         document.documentElement.classList.add("ready");
         await this.copy.show();
-        
+
         // デフォルトでスプライトシートを使用する場合
         try {
           const spritesheetData = await import("./spritesheet-data.json");
@@ -70,7 +70,7 @@ export class Bg extends EventEmitter {
           console.log("スプライトシートが見つからないため、Base64モードを使用");
           await this.setIcons(icons);
         }
-        
+
         this.cardContainer.init();
       });
   }
@@ -95,40 +95,45 @@ export class Bg extends EventEmitter {
   async setIconsWithSpritesheet(icons: Icon[], spritesheetData: any) {
     // WebPサポートを確認
     const supportsWebP = await this.checkWebPSupport();
-    
+
     // スプライトシートのパスを決定
-    const iconSpritePath = supportsWebP && spritesheetData.icons?.meta.imageWebp
-      ? spritesheetData.icons.meta.imageWebp
-      : spritesheetData.icons?.meta.image;
-    
-    const qrSpritePath = supportsWebP && spritesheetData.qr?.meta.imageWebp
-      ? spritesheetData.qr.meta.imageWebp
-      : spritesheetData.qr?.meta.image;
-    
+    const iconSpritePath =
+      supportsWebP && spritesheetData.icons?.meta.imageWebp
+        ? spritesheetData.icons.meta.imageWebp
+        : spritesheetData.icons?.meta.image;
+
+    const qrSpritePath =
+      supportsWebP && spritesheetData.qr?.meta.imageWebp
+        ? spritesheetData.qr.meta.imageWebp
+        : spritesheetData.qr?.meta.image;
+
     // handwritingsは省略可能
-    const handwritingsSpritePath = supportsWebP && spritesheetData.handwritings?.meta.imageWebp
-      ? spritesheetData.handwritings.meta.imageWebp
-      : spritesheetData.handwritings?.meta.image;
-    
+    const handwritingsSpritePath =
+      supportsWebP && spritesheetData.handwritings?.meta.imageWebp
+        ? spritesheetData.handwritings.meta.imageWebp
+        : spritesheetData.handwritings?.meta.image;
+
     if (!iconSpritePath || !qrSpritePath) {
-      console.warn("スプライトシートのパスが見つかりません。Base64モードにフォールバック");
+      console.warn(
+        "スプライトシートのパスが見つかりません。Base64モードにフォールバック",
+      );
       return this.setIcons(icons);
     }
-    
+
     // オプションを設定してsetIconsを呼び出し
     const options: SpritesheetOptions = {
       iconSpritePath,
       qrSpritePath,
       iconSpriteData: spritesheetData.icons,
-      qrSpriteData: spritesheetData.qr
+      qrSpriteData: spritesheetData.qr,
     };
-    
+
     // handwritingsがある場合のみ追加
     if (handwritingsSpritePath) {
       options.handwritingsSpritePath = handwritingsSpritePath;
       options.handwritingsSpriteData = spritesheetData.handwritings;
     }
-    
+
     return this.setIcons(icons, options);
   }
 
@@ -137,77 +142,88 @@ export class Bg extends EventEmitter {
    * @param icons アイコンデータ配列
    * @param options スプライトシートオプション（省略時はBase64モード）
    */
-  async setIcons(icons: Icon[], options?: SpritesheetOptions) {
+  async setIcons(
+    icons: Icon[],
+    options?: SpritesheetOptions,
+    label1Text: string = "Company",
+    label2Text: string = "Name",
+  ) {
     // iconsの順番をランダムに
     icons = icons.sort(() => Math.random() - 0.5);
-    
+
     let iconSpriteSheet: Spritesheet;
     let qrSpriteSheet: Spritesheet;
     let handwritingsSpriteSheet: Spritesheet | undefined;
-    
+
     // スプライトシートモード
     if (options?.iconSpritePath && options?.qrSpritePath) {
       console.log("スプライトシートモードでアイコンを読み込み");
-      
+
       try {
         // 必須のスプライトシートテクスチャを読み込み
         const textures = await Promise.all([
           Assets.load(options.iconSpritePath),
           Assets.load(options.qrSpritePath),
           // handwritingsは省略可能
-          options.handwritingsSpritePath ? Assets.load(options.handwritingsSpritePath) : Promise.resolve(null)
+          options.handwritingsSpritePath
+            ? Assets.load(options.handwritingsSpritePath)
+            : Promise.resolve(null),
         ]);
-        
+
         const [iconTexture, qrTexture, handwritingsTexture] = textures;
-        
+
         // Spritesheetオブジェクトを作成
         iconSpriteSheet = new Spritesheet(iconTexture, {
           frames: options.iconSpriteData.frames,
-          meta: options.iconSpriteData.meta
+          meta: options.iconSpriteData.meta,
         });
-        
+
         qrSpriteSheet = new Spritesheet(qrTexture, {
           frames: options.qrSpriteData.frames,
-          meta: options.qrSpriteData.meta
+          meta: options.qrSpriteData.meta,
         });
-        
+
         // handwritingsがある場合のみ作成
         if (handwritingsTexture && options.handwritingsSpriteData) {
           handwritingsSpriteSheet = new Spritesheet(handwritingsTexture, {
             frames: options.handwritingsSpriteData.frames,
-            meta: options.handwritingsSpriteData.meta
+            meta: options.handwritingsSpriteData.meta,
           });
         }
-        
+
         // スプライトシートを解析
-        const parsePromises = [
-          iconSpriteSheet.parse(),
-          qrSpriteSheet.parse()
-        ];
+        const parsePromises = [iconSpriteSheet.parse(), qrSpriteSheet.parse()];
         if (handwritingsSpriteSheet) {
           parsePromises.push(handwritingsSpriteSheet.parse());
         }
         await Promise.all(parsePromises);
-        
-        console.log(`✓ スプライトシートから${icons.length}個のアイコンを読み込み完了`);
+
+        console.log(
+          `✓ スプライトシートから${icons.length}個のアイコンを読み込み完了`,
+        );
         if (handwritingsSpriteSheet) {
           console.log("✓ Handwritingsスプライトシートも読み込み完了");
         }
-        
       } catch (error) {
         console.error("スプライトシート読み込みエラー:", error);
         console.log("Base64モードにフォールバック");
         return this.setIconsBase64(icons);
       }
-      
     } else {
       // Base64モード（従来の実装）
       console.log("Base64モードでアイコンを読み込み");
       return this.setIconsBase64(icons);
     }
-    
+
     // CardContainerにスプライトシートを渡す
-    this.cardContainer.setIcons(icons, iconSpriteSheet!, qrSpriteSheet!, handwritingsSpriteSheet);
+    this.cardContainer.setIcons(
+      icons,
+      iconSpriteSheet!,
+      qrSpriteSheet!,
+      handwritingsSpriteSheet,
+      label1Text,
+      label2Text,
+    );
   }
 
   /**
@@ -215,12 +231,12 @@ export class Bg extends EventEmitter {
    */
   private async setIconsBase64(icons: Icon[]) {
     // データが空の場合はスキップ
-    const validIcons = icons.filter(icon => icon.data && icon.data !== "");
+    const validIcons = icons.filter((icon) => icon.data && icon.data !== "");
     if (validIcons.length === 0) {
       console.warn("有効なBase64データを持つアイコンがありません");
       return;
     }
-    
+
     // アイコンを1つのキャンバスにスプライトシート化して描画
     const offset = 2;
     const iconCanvas = document.createElement("canvas");
@@ -236,11 +252,11 @@ export class Bg extends EventEmitter {
     qrCanvas.height = (iconSize + offset) * numRows;
     const iconCtx = iconCanvas.getContext("2d")!;
     const qrCtx = qrCanvas.getContext("2d")!;
-    
+
     for (let i = 0; i < validIcons.length; i++) {
       const col = i % numCols;
       const row = Math.floor(i / numCols);
-      
+
       // アイコン画像
       if (validIcons[i]!.data) {
         const iconImg = new Image();
@@ -259,7 +275,7 @@ export class Bg extends EventEmitter {
           );
         }
       }
-      
+
       // QR画像
       if (validIcons[i]!.qr) {
         const qrImg = new Image();
@@ -323,7 +339,7 @@ export class Bg extends EventEmitter {
     this.cardContainer.setIcons(validIcons, iconSpriteSheet, qrSpriteSheet);
     console.log(`✓ Base64から${validIcons.length}個のアイコンを読み込み完了`);
   }
-  
+
   /**
    * WebPサポートを確認
    */
@@ -333,7 +349,8 @@ export class Bg extends EventEmitter {
       webP.onload = webP.onerror = function () {
         resolve(webP.height === 2);
       };
-      webP.src = 'data:image/webp;base64,UklGRjoAAABXRUJQVlA4IC4AAACyAgCdASoCAAIALmk0mk0iIiIiIgBoSygABc6WWgAA/veff/0PP8bA//LwYAAA';
+      webP.src =
+        "data:image/webp;base64,UklGRjoAAABXRUJQVlA4IC4AAACyAgCdASoCAAIALmk0mk0iIiIiIgBoSygABc6WWgAA/veff/0PP8bA//LwYAAA";
     });
   }
 }

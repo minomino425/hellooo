@@ -3,7 +3,7 @@ import CardBg from "./cardBg";
 import CardSprite from "./cardSprite";
 import CardLabelText from "./cardLabelText";
 import CardText from "./cardText";
-import HandwritingSprite from "./handwritingSprite";
+import CardHandwriting from "./cardHandwriting";
 import { Icon } from "../../../../common/_interface";
 import gsap from "gsap";
 import { FlipMask } from "./flipMask";
@@ -38,11 +38,11 @@ export default class Card extends Container {
   containerMask: FlipMask = new FlipMask(CardBg.WIDTH, CardBg.HEIGHT);
   icon: CardSprite;
   qr: CardSprite;
-  handwriting?: HandwritingSprite;
+  handwriting?: CardHandwriting;
   accountLabel: CardLabelText = new CardLabelText("X(Twitter):", 110, 25);
   account: CardText = new CardText(110, 40);
-  companyLabel: CardLabelText = new CardLabelText("Company:", 110, 25 + 53);
-  nameLabel: CardLabelText = new CardLabelText("Name:", 110, 25 + 53 * 2);
+  label1: CardLabelText = new CardLabelText("Company:", 110, 25 + 53);
+  label2: CardLabelText = new CardLabelText("Name:", 110, 25 + 53 * 2);
 
   protected _flipPosition: number = 0.75;
   protected _flipAngle: number = Math.PI * -0.25;
@@ -56,15 +56,19 @@ export default class Card extends Container {
     iconTexture: Texture,
     qrTexture: Texture,
     handwritingTexture?: Texture,
+    label1Text?: string,
+    label2Text?: string,
   ) {
     super();
     this.data = icon;
     this.icon = new CardSprite(25, 20, iconTexture);
     this.qr = new CardSprite(25, 105, qrTexture);
+    if (label1Text) this.label1.setText(label1Text);
+    if (label2Text) this.label2.setText(label2Text);
 
     // handwritingがある場合のみ作成
     if (handwritingTexture) {
-      this.handwriting = new HandwritingSprite(handwritingTexture);
+      this.handwriting = new CardHandwriting(handwritingTexture);
     }
     this.transparentBg.alpha = 0;
     this.container.addChild(this.bg);
@@ -72,8 +76,8 @@ export default class Card extends Container {
     this.container.addChild(this.qr);
     this.container.addChild(this.accountLabel);
     this.container.addChild(this.account);
-    this.container.addChild(this.companyLabel);
-    this.container.addChild(this.nameLabel);
+    this.container.addChild(this.label1);
+    this.container.addChild(this.label2);
 
     // handwritingを最前面に追加
     if (this.handwriting) {
@@ -176,8 +180,14 @@ export default class Card extends Container {
       this.visible = true;
       this.accountLabel.show();
       this.account.show();
-      this.companyLabel.show();
-      this.nameLabel.show();
+      this.label1.show();
+      this.label2.show();
+
+      // handwritingを0.5秒後に表示
+      if (this.handwriting) {
+        this.handwriting.show(0.75);
+      }
+
       this.flipPosition = 0.85;
       this.flipAngle = Math.PI * -0.75;
       gsap.fromTo(

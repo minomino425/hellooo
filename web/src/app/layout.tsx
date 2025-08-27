@@ -1,5 +1,3 @@
-"use client";
-
 import { Noto_Sans_JP, Roboto } from "next/font/google";
 import "@/styles/_base.scss";
 import Script from "next/script";
