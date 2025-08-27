@@ -45,7 +45,7 @@ export async function getXIcons(accounts: string[]) {
 			chrome.tabs.create({ url: `https://x.com/${account}` }, (tab) => resolve(tab))
 		);
 		// タブの読み込みを待ってアイコンを取得
-		const url = await new Promise<string>(async (resolve) => {
+		const url = await new Promise<string>((resolve) => {
 			const onComplete = (message: any) => {
 				if (message.account == account && message.iconUrl !== undefined) {
 					chrome.runtime.onMessage.removeListener(onComplete);
