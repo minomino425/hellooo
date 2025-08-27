@@ -57,7 +57,15 @@ export default function Home() {
         if (process.env.NODE_ENV === "development") {
           downloadJson(event.data.icons, "icons.json");
         }
-        Bg.getInstance().setIcons(event.data.icons);
+        console.log(
+          `Page.tsx field1Text: ${field1Text}, field2Text: ${field2Text}`,
+        );
+        Bg.getInstance().setIcons(
+          event.data.icons,
+          undefined,
+          field1Text,
+          field2Text,
+        );
         Bg.getInstance().showThanks();
       }
     };
@@ -67,7 +75,7 @@ export default function Home() {
         window.removeEventListener("message", onGetMessage);
       };
     }
-  }, []);
+  }, [field1Text, field2Text]);
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);

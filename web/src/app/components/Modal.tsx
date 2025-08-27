@@ -92,19 +92,28 @@ export default function Modal(props: ModalProps) {
 
   // インストール済みの場合はステップ2に進む
   useEffect(() => {
+    // クライアントサイドでのみ実行
+    if (typeof window === 'undefined') return;
+    
     // 拡張機能がインストールされているかチェック
     const checkIsExtensionInstalled = () => {
       return window.document.documentElement.classList.contains(
         "hellooo-installed",
       );
     };
-    setIsExtensionInstalled(checkIsExtensionInstalled());
+    
+    // 少し遅延させてから実行（DOMが完全に準備された後）
+    const timer = setTimeout(() => {
+      setIsExtensionInstalled(checkIsExtensionInstalled());
+      if (checkIsExtensionInstalled() && step == 1) setStep(2);
+    }, 100);
 
     window.postMessage({
       type: isOpen ? "modalOpen" : "modalClose",
       selectedTemplateId: templateId,
     });
-    if (checkIsExtensionInstalled() && step == 1) setStep(2);
+    
+    return () => clearTimeout(timer);
   }, [isOpen]);
 
   // テキストエリアの設定
@@ -152,6 +161,20 @@ export default function Modal(props: ModalProps) {
       setStep(2);
       return;
     }
+    
+    // フィールド1、フィールド2の半角英数字チェック
+    const alphanumericRegex = /^[a-zA-Z0-9\s]*$/;
+    
+    if (!alphanumericRegex.test(field1Text)) {
+      alert("フィールド1は半角英数字のみで入力してください。");
+      return;
+    }
+    
+    if (!alphanumericRegex.test(field2Text)) {
+      alert("フィールド2は半角英数字のみで入力してください。");
+      return;
+    }
+    
     window.postMessage({
       type: "create",
       accounts: accountText.split("\n"),
@@ -245,8 +268,11 @@ export default function Modal(props: ModalProps) {
             onChange={onTextAreaChange}
             value={accountText}
           />
-          <div className="modal__step3__customize">
-            <label>手書きフィールド名1</label>
+        </div>
+        <div className="modal__step3__customize">
+          {/* <h2>カスタマイズ</h2> */}
+          <div>
+            <label>フィールド 1</label>
             <input
               type="text"
               maxLength={20}
@@ -254,19 +280,19 @@ export default function Modal(props: ModalProps) {
               ref={textField1Ref}
               value={field1Text}
             />
-            <label>
-              手書きフィールド名2
-              <input
-                type="text"
-                maxLength={20}
-                onChange={onField2Change}
-                ref={textField2Ref}
-                value={field2Text}
-              />
-            </label>
+          </div>
+          <div>
+            <label>フィールド 2</label>
+            <input
+              type="text"
+              maxLength={20}
+              onChange={onField2Change}
+              ref={textField2Ref}
+              value={field2Text}
+            />
           </div>
         </div>
-        <div>
+        <div className="modal__step3__submit">
           <p className="modal__text">
             1行に1アカウントのリストを入力するか、テキストファイルをドラッグ&ドロップしてください。
           </p>

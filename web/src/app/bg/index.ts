@@ -67,7 +67,6 @@ export class Bg extends EventEmitter {
           await this.setIconsWithSpritesheet(icons, spritesheetData.default);
         } catch (error) {
           // スプライトシートが無い場合は従来のBase64モードにフォールバック
-          console.log("スプライトシートが見つからないため、Base64モードを使用");
           await this.setIcons(icons);
         }
 
@@ -157,8 +156,6 @@ export class Bg extends EventEmitter {
 
     // スプライトシートモード
     if (options?.iconSpritePath && options?.qrSpritePath) {
-      console.log("スプライトシートモードでアイコンを読み込み");
-
       try {
         // 必須のスプライトシートテクスチャを読み込み
         const textures = await Promise.all([
@@ -197,22 +194,13 @@ export class Bg extends EventEmitter {
           parsePromises.push(handwritingsSpriteSheet.parse());
         }
         await Promise.all(parsePromises);
-
-        console.log(
-          `✓ スプライトシートから${icons.length}個のアイコンを読み込み完了`,
-        );
-        if (handwritingsSpriteSheet) {
-          console.log("✓ Handwritingsスプライトシートも読み込み完了");
-        }
       } catch (error) {
         console.error("スプライトシート読み込みエラー:", error);
-        console.log("Base64モードにフォールバック");
         return this.setIconsBase64(icons);
       }
     } else {
       // Base64モード（従来の実装）
-      console.log("Base64モードでアイコンを読み込み");
-      return this.setIconsBase64(icons);
+      return this.setIconsBase64(icons, label1Text, label2Text);
     }
 
     // CardContainerにスプライトシートを渡す
@@ -229,7 +217,11 @@ export class Bg extends EventEmitter {
   /**
    * Base64データからスプライトシートを生成（従来の実装）
    */
-  private async setIconsBase64(icons: Icon[]) {
+  private async setIconsBase64(
+    icons: Icon[],
+    label1Text?: string,
+    label2Text?: string,
+  ) {
     // データが空の場合はスキップ
     const validIcons = icons.filter((icon) => icon.data && icon.data !== "");
     if (validIcons.length === 0) {
@@ -336,8 +328,14 @@ export class Bg extends EventEmitter {
     await iconSpriteSheet.parse();
     await qrSpriteSheet.parse();
 
-    this.cardContainer.setIcons(validIcons, iconSpriteSheet, qrSpriteSheet);
-    console.log(`✓ Base64から${validIcons.length}個のアイコンを読み込み完了`);
+    this.cardContainer.setIcons(
+      validIcons,
+      iconSpriteSheet,
+      qrSpriteSheet,
+      undefined,
+      label1Text,
+      label2Text,
+    );
   }
 
   /**
