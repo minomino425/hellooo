@@ -161,7 +161,7 @@ export default function Home() {
         <a href="https://x.com/WebMino" target="_blank">
           @WebMino
         </a>
-        &nbsp;/ This service is originally made for&nbsp;
+        &nbsp;/ Originally made for&nbsp;
         <a href="https://x.com/casestudy_info" target="_blank">
           @casestudy_info
         </a>

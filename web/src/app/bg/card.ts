@@ -47,6 +47,8 @@ export default class Card extends Container {
   protected _flipPosition: number = 0.75;
   protected _flipAngle: number = Math.PI * -0.25;
   protected _mouseOutTimer: number = 0;
+  protected _mousePosition: { x: number; y: number } | null = null;
+  protected _animationFrameId: number = 0;
 
   /**
    * コンストラクタ
@@ -116,29 +118,54 @@ export default class Card extends Container {
     if (this._mouseOutTimer) window.clearTimeout(this._mouseOutTimer);
     this.on("mousemove", this.onMouseMove);
     if (this.parent) this.parent.addChild(this);
+    // アニメーションフレーム開始
+    if (!this._animationFrameId) {
+      this._animationFrameId = window.requestAnimationFrame(this.updateFlipAnimation);
+    }
   };
 
   onMouseMove = (e: FederatedPointerEvent) => {
+    // 座標だけを保存
     const mouse = e.getLocalPosition(this);
-    const cx = CardBg.WIDTH;
-    // const cy = CardBg.HEIGHT * 0.5;
-    const cy = CardBg.HEIGHT;
-    const d = Math.sqrt((cx - mouse.x) ** 2 + (cy - mouse.y) ** 2);
-    let a = Math.atan2(mouse.y - cy, mouse.x - cx) + Math.PI * 0;
-    if (a > 0) a -= Math.PI * 2;
-    const minFlip = 0.75;
-    const p = 1 - Math.max(0, Math.min(1, d / (cx * (1 - minFlip) * 2)));
-    gsap.to(this, {
-      flipPosition: minFlip + p * (1 - minFlip),
-      flipAngle: Math.max(Math.min(a, Math.PI * -0.55), Math.PI * -0.95),
-      duration: 0.25,
-      ease: "cubic.out",
-      overwrite: true,
-    });
+    this._mousePosition = { x: mouse.x, y: mouse.y };
+  };
+
+  updateFlipAnimation = () => {
+    if (this._mousePosition) {
+      const { x: mouseX, y: mouseY } = this._mousePosition;
+      const cx = CardBg.WIDTH;
+      const cy = CardBg.HEIGHT;
+      const d = Math.sqrt((cx - mouseX) ** 2 + (cy - mouseY) ** 2);
+      let a = Math.atan2(mouseY - cy, mouseX - cx) + Math.PI * 0;
+      if (a > 0) a -= Math.PI * 2;
+      const minFlip = 0.75;
+      const p = 1 - Math.max(0, Math.min(1, d / (cx * (1 - minFlip) * 2)));
+      
+      gsap.to(this, {
+        flipPosition: minFlip + p * (1 - minFlip),
+        flipAngle: Math.max(Math.min(a, Math.PI * -0.55), Math.PI * -0.95),
+        duration: 0.25,
+        ease: "cubic.out",
+        overwrite: true,
+      });
+    }
+    
+    // 次のフレームをリクエスト
+    if (this._mousePosition) {
+      this._animationFrameId = window.requestAnimationFrame(this.updateFlipAnimation);
+    }
   };
 
   onMouseOut = (e: FederatedPointerEvent) => {
     this.off("mousemove", this.onMouseMove);
+    this._mousePosition = null;
+    
+    // アニメーションフレームをキャンセル
+    if (this._animationFrameId) {
+      window.cancelAnimationFrame(this._animationFrameId);
+      this._animationFrameId = 0;
+    }
+    
     if (this._mouseOutTimer) window.clearTimeout(this._mouseOutTimer);
     this._mouseOutTimer = window.setTimeout(() => {
       gsap.to(this, {
