@@ -6,6 +6,14 @@ export interface Icon {
 	platform?: 'x' | 'instagram'
 }
 
+export interface IconWithSpriteSheet {
+	account: string
+	url: string
+	dataPath?: string
+	qrPath?: string
+	platform?: 'x' | 'instagram'
+}
+
 export interface LabelTemplate {
 	id: string
 	url: string
