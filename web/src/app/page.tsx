@@ -13,7 +13,7 @@ export default function Home() {
   const [spLayout, setSpLayout] = useState(false);
   const [pcChrome, setPcChrome] = useState(false);
   const [accountText, setAccountText] = useState<string>(
-    "@kjkmr\n@WebMino\n@casestudy_info\n@a_saya_108\n@bxoxnx\n@tomonorix0805\n@oniguili\n@design30m\n@soundkitchen\n@akihirofujiwara\n@ToteWebdesign\n@MEFILAS_tamo2\n@free__age",
+    "@kjkmr\n@a_saya_108\n@bxoxnx\n@tomonorix0805",
   );
   const [field1Text, setField1Text] = useState<string>("Company");
   const [field2Text, setField2Text] = useState<string>("Name");
