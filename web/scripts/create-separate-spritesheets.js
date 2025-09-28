@@ -20,9 +20,9 @@ const HANDWRITING_HEIGHT = 394; // 197 * 2 (カード高さのretina)
 const PADDING = 2;
 const MAX_TEXTURE_SIZE = 4096; // 大きな画像に対応するため増加
 
-const iconDir = path.join(__dirname, '../public/images/icons');
-const qrDir = path.join(__dirname, '../public/images/qr');
-const handwritingsDir = path.join(__dirname, '../public/images/handwritings');
+const iconDir = path.join(__dirname, '../public/images/sprites/icons');
+const qrDir = path.join(__dirname, '../public/images/sprites/qr');
+const handwritingsDir = path.join(__dirname, '../public/images/sprites/handwritings');
 const outputDir = path.join(__dirname, '../public/images/sprites');
 const outputJsonPath = path.join(__dirname, '../src/app/bg/spritesheet-data.json');
 

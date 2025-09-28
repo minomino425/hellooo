@@ -18,8 +18,8 @@ const ICON_SIZE = 140; // 70 * 2 (retina)
 const PADDING = 2;
 const MAX_TEXTURE_SIZE = 2048;
 
-const iconDir = path.join(__dirname, '../public/images/icons');
-const qrDir = path.join(__dirname, '../public/images/qr');
+const iconDir = path.join(__dirname, '../public/images/sprites/icons');
+const qrDir = path.join(__dirname, '../public/images/sprites/qr');
 const outputDir = path.join(__dirname, '../public/images/sprites');
 const outputJsonPath = path.join(__dirname, '../src/app/bg/spritesheet-data.json');
 

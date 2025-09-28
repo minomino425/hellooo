@@ -34,3 +34,8 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+
+/public/images/sprites/qr
+/public/images/sprites/icons
+/public/images/sprites/handwritings

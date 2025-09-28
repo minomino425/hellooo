@@ -8,8 +8,9 @@ const { promisify } = require('util');
 const execAsync = promisify(exec);
 
 // 変換対象のディレクトリ
-const iconDir = path.join(__dirname, '../public/images/icons');
-const qrDir = path.join(__dirname, '../public/images/qr');
+const iconDir = path.join(__dirname, '../public/images/sprites/icons');
+const qrDir = path.join(__dirname, '../public/images/sprites/qr');
+const handwritingsDir = path.join(__dirname, '../public/images/sprites/handwritings');
 const outputJsonPath = path.join(__dirname, '../src/app/bg/icons-data.json');
 
 // cwebpコマンドの存在確認
@@ -119,9 +120,12 @@ async function main() {
 
   // アイコン画像の変換
   const iconResults = await convertDirectory(iconDir, 'アイコン');
-  
+
   // QR画像の変換
   const qrResults = await convertDirectory(qrDir, 'QR');
+
+  // 手書き画像の変換
+  const handwritingsResults = await convertDirectory(handwritingsDir, '手書き');
 
   // JSONファイルのパスを更新
   updateJsonPaths();
@@ -133,6 +137,9 @@ async function main() {
   }
   if (qrResults) {
     console.log(`QR: ${qrResults.convertedCount}個変換成功`);
+  }
+  if (handwritingsResults) {
+    console.log(`手書き: ${handwritingsResults.convertedCount}個変換成功`);
   }
   console.log('\n次のステップ:');
   console.log('1. 変換されたWebPファイルを確認');

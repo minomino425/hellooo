@@ -5,9 +5,9 @@ const path = require('path');
 
 // icons.tsファイルのパスを設定（バックアップファイルから読み込む）
 const iconsFilePath = path.join(__dirname, '../src/app/bg/icons.backup.ts');
-const outputDir = path.join(__dirname, '../public/images/icons');
-const outputQrDir = path.join(__dirname, '../public/images/qr');
-const outputHandwritingsDir = path.join(__dirname, '../public/images/handwritings');
+const outputDir = path.join(__dirname, '../public/images/sprites/icons');
+const outputQrDir = path.join(__dirname, '../public/images/sprites/qr');
+const outputHandwritingsDir = path.join(__dirname, '../public/images/sprites/handwritings');
 const outputJsonPath = path.join(__dirname, '../src/app/bg/icons-data.json');
 const handwritingsSourceDir = path.join(__dirname, '../src/app/bg/handwritings');
 
@@ -77,7 +77,7 @@ iconsArray.forEach((icon, index) => {
         fs.writeFileSync(filepath, imageBuffer);
         
         // 新しいパスを設定
-        newIcon.dataPath = `/images/icons/${filename}`;
+        newIcon.dataPath = `/images/sprites/icons/${filename}`;
         console.log(`✓ ${icon.account} - メイン画像を保存: ${filename}`);
       }
     }
@@ -98,7 +98,7 @@ iconsArray.forEach((icon, index) => {
         fs.writeFileSync(filepath, imageBuffer);
         
         // 新しいパスを設定
-        newIcon.qrPath = `/images/qr/${filename}`;
+        newIcon.qrPath = `/images/sprites/qr/${filename}`;
         console.log(`✓ ${icon.account} - QR画像を保存: ${filename}`);
       }
     }
@@ -131,7 +131,7 @@ if (fs.existsSync(handwritingsSourceDir)) {
     // icons-data.jsonに追加
     const iconIndex = parseInt(file.replace('.png', '')) - 1;
     if (newIconsData[iconIndex]) {
-      newIconsData[iconIndex].handwritingPath = `/images/handwritings/${file}`;
+      newIconsData[iconIndex].handwritingPath = `/images/sprites/handwritings/${file}`;
     }
   });
 } else {
