@@ -92,7 +92,10 @@ export default class Pdf {
 		}
 		// qr
 		if (account) {
-			this.#qr.set({ value: `https://x.com/${account}` });
+			const qrUrl = icon.platform === 'instagram'
+				? `https://instagram.com/${account}`
+				: `https://x.com/${account}`;
+			this.#qr.set({ value: qrUrl });
 			const qr = this.#qr.toDataURL('image/png');
 			icon.qr = qr;
 			doc.addImage(

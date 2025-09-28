@@ -4,6 +4,7 @@ import React, { SyntheticEvent, useEffect, useRef, useState } from "react";
 import TemplateList from "./templateList";
 import "@/styles/_modal.scss";
 import { getAccountLists } from "./utils";
+import { platform } from "os";
 
 interface ModalProps {
   isOpen: boolean;
@@ -37,6 +38,7 @@ export default function Modal(props: ModalProps) {
   const [isExtensionInstalled, setIsExtensionInstalled] = useState(false);
   const dropAreaRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const snsSelectRef = useRef<HTMLSelectElement>(null);
   const textField1Ref = useRef<HTMLInputElement>(null);
   const textField2Ref = useRef<HTMLInputElement>(null);
 
@@ -93,15 +95,15 @@ export default function Modal(props: ModalProps) {
   // インストール済みの場合はステップ2に進む
   useEffect(() => {
     // クライアントサイドでのみ実行
-    if (typeof window === 'undefined') return;
-    
+    if (typeof window === "undefined") return;
+
     // 拡張機能がインストールされているかチェック
     const checkIsExtensionInstalled = () => {
       return window.document.documentElement.classList.contains(
         "hellooo-installed",
       );
     };
-    
+
     // 少し遅延させてから実行（DOMが完全に準備された後）
     const timer = setTimeout(() => {
       setIsExtensionInstalled(checkIsExtensionInstalled());
@@ -112,7 +114,7 @@ export default function Modal(props: ModalProps) {
       type: isOpen ? "modalOpen" : "modalClose",
       selectedTemplateId: templateId,
     });
-    
+
     return () => clearTimeout(timer);
   }, [isOpen]);
 
@@ -161,23 +163,24 @@ export default function Modal(props: ModalProps) {
       setStep(2);
       return;
     }
-    
+
     // フィールド1、フィールド2の半角英数字チェック
     const alphanumericRegex = /^[a-zA-Z0-9\s]*$/;
-    
+
     if (!alphanumericRegex.test(field1Text)) {
       alert("フィールド1は半角英数字のみで入力してください。");
       return;
     }
-    
+
     if (!alphanumericRegex.test(field2Text)) {
       alert("フィールド2は半角英数字のみで入力してください。");
       return;
     }
-    
+
     window.postMessage({
       type: "create",
       accounts: accountText.split("\n"),
+      platform: snsSelectRef.current?.value || "x",
       field1Text,
       field2Text,
       selectedTemplateId: templateId,
@@ -270,7 +273,13 @@ export default function Modal(props: ModalProps) {
           />
         </div>
         <div className="modal__step3__customize">
-          {/* <h2>カスタマイズ</h2> */}
+          <div>
+            <label>SNS</label>
+            <select ref={snsSelectRef}>
+              <option value="x">X (旧Twitter)</option>
+              <option value="instagram">Instagram</option>
+            </select>
+          </div>
           <div>
             <label>フィールド 1</label>
             <input

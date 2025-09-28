@@ -1,17 +1,18 @@
 import { getImageAsBase64 } from './utils';
 
 /**
- * getXIcons
+ * getInstagramIcons
  * @param accounts
  * @returns iconUrls
  */
-export async function getXIcons(accounts: string[]) {
+export async function getInstagramIcons(accounts: string[]) {
 	const icons: {
 		account: string;
 		url: string;
 		data: string;
-		platform?: 'x';
+		platform: 'instagram';
 	}[] = [];
+
 	for (let i = 0; i < accounts.length; i++) {
 		const account = accounts[i];
 		// @のみの場合は空シールとして扱う
@@ -20,13 +21,13 @@ export async function getXIcons(accounts: string[]) {
 				account: '',
 				url: '',
 				data: '',
-				platform: 'x',
+				platform: 'instagram',
 			});
 			continue;
 		}
 		// タブを開く
 		const tab = await new Promise<chrome.tabs.Tab>((resolve) =>
-			chrome.tabs.create({ url: `https://x.com/${account}` }, (tab) => resolve(tab))
+			chrome.tabs.create({ url: `https://instagram.com/${account}` }, (tab) => resolve(tab))
 		);
 		// タブの読み込みを待ってアイコンを取得
 		const url = await new Promise<string>((resolve) => {
@@ -47,7 +48,7 @@ export async function getXIcons(accounts: string[]) {
 			account,
 			url,
 			data: url ? await getImageAsBase64(url) : '',
-			platform: 'x',
+			platform: 'instagram',
 		});
 		chrome.tabs.remove(tab.id as number);
 		await new Promise((resolve) => setTimeout(resolve, 500));

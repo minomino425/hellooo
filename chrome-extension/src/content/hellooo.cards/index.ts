@@ -15,6 +15,7 @@ export default class App {
 		//
 		window.addEventListener('message', (event: MessageEvent) => {
 			document.documentElement.classList.add('hellooo-installed');
+			console.log(event.data);
 			if (event.data.type == 'selectTemplate' && event.data.selectedTemplateId) {
 				this.#selectedTemplate = Templates.getById(event.data.selectedTemplateId);
 			}
@@ -28,16 +29,17 @@ export default class App {
 				this.#accounts = event.data.accounts;
 				this.#field1Text = event.data.field1Text || 'Company';
 				this.#field2Text = event.data.field2Text || 'Name';
-				this.#getIconsAndCreatePdf();
+				const platform = event.data.platform || 'x'; // デフォルトはX（後方互換性）
+				this.#getIconsAndCreatePdf(platform);
 			}
 		});
 	}
 	// PDF生成
 	// await this.#getIconsAndCreatePdf();
 
-	#getIconsAndCreatePdf = async () => {
+	#getIconsAndCreatePdf = async (platform: 'x' | 'instagram' = 'x') => {
 		if (!this.#selectedTemplate) return;
-		const icons = await this.#getIcons(this.#accounts);
+		const icons = await this.#getIcons(this.#accounts, platform);
 		if (icons !== false) {
 			if (!confirm('PDFをダウンロードします。')) return false;
 			window.postMessage({ type: 'startCreatePdf' }, '*');
@@ -51,7 +53,7 @@ export default class App {
 	 * @param accountLists
 	 * @returns
 	 */
-	async #getIcons(accounts: string[]): Promise<Icon[] | false> {
+	async #getIcons(accounts: string[], platform: 'x' | 'instagram' = 'x'): Promise<Icon[] | false> {
 		const accountNames: string[] = [];
 		accounts.map((account) => {
 			let a = account;
@@ -64,16 +66,17 @@ export default class App {
 			accountNames.push(a);
 		});
 
+		const platformName = platform === 'instagram' ? 'Instagram' : 'X（Twitter）';
 		if (
 			!confirm(
-				'X（Twitter）のアイコンを取得するため、リスト内の全アカウントのページをタブで開きます。'
+				`${platformName}のアイコンを取得するため、リスト内の全アカウントのページをタブで開きます。`
 			)
 		) {
 			return false;
 		}
 		window.postMessage({ type: 'startGetIcons' }, '*');
 		const icons = await new Promise<Icon[]>((resolve) => {
-			chrome.runtime.sendMessage({ accounts: accountNames }, (response) => {
+			chrome.runtime.sendMessage({ accounts: accountNames, platform }, (response) => {
 				chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 					if (message.sessionId === response.sessionId) resolve(message.icons);
 					sendResponse();
