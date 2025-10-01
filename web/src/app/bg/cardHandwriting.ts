@@ -10,6 +10,7 @@ import { COLORS } from "./constants";
 export default class CardHandwriting extends Container {
   private sprite: Sprite;
   private maskGraphics: Graphics;
+  private isOver: boolean = false;
 
   /**
    * コンストラクタ
@@ -47,12 +48,33 @@ export default class CardHandwriting extends Container {
     this.tint = 0x000000;
   }
 
-  over() {
-    this.sprite.tint = COLORS.orange;
+  async over() {
+    this.isOver = true;
+    // オレンジ→黒へのアニメーション
+    this.tint = 0xfd5100;
+    // rgbに変換
+    const rgb = this.hexToRgb(this.tint);
+    gsap.to(rgb, {
+      r: 0,
+      g: 0,
+      b: 0,
+      onUpdate: () => {
+        this.tint = (rgb.r << 16) + (rgb.g << 8) + rgb.b;
+      },
+      duration: 0.25,
+      ease: "sine.in",
+    });
+  }
+
+  hexToRgb(hex: number) {
+    const r = (hex >> 16) & 0xff;
+    const g = (hex >> 8) & 0xff;
+    const b = hex & 0xff;
+    return { r, g, b };
   }
 
   out() {
-    this.sprite.tint = COLORS.black;
+    this.tint = 0x000000;
   }
 
   /**

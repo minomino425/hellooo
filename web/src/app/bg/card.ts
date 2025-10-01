@@ -99,7 +99,7 @@ export default class Card extends Container {
     this.addChild(this.backSide);
     this.visible = false;
     this.interactive = true;
-    this.cursor = "pointer";
+    // this.cursor = "pointer";
     this.flipAngle = this._flipAngle;
     this.flipPosition = this._flipPosition;
     this.on("mouseover", this.onMouseOver);
@@ -127,6 +127,7 @@ export default class Card extends Container {
         this.updateFlipAnimation,
       );
     }
+    this.handwriting?.over();
   };
 
   onMouseMove = (e: FederatedPointerEvent) => {
@@ -172,6 +173,7 @@ export default class Card extends Container {
       window.cancelAnimationFrame(this._animationFrameId);
       this._animationFrameId = 0;
     }
+    this.handwriting?.out();
 
     if (this._mouseOutTimer) window.clearTimeout(this._mouseOutTimer);
     this._mouseOutTimer = window.setTimeout(() => {
