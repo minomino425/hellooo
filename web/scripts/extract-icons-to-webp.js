@@ -156,22 +156,6 @@ if (fs.existsSync(handwritingsSourceDir)) {
 // JSONファイルとして保存
 fs.writeFileSync(outputJsonPath, JSON.stringify(newIconsData, null, 2));
 
-// 新しいicons.tsファイルを生成
-const newIconsTs = `import { Icon } from "../../../../common/_interface";
-import iconsData from "./icons-data.json";
-
-// 画像データはpublicフォルダから読み込むように変更
-export const icons: Icon[] = iconsData.map(icon => ({
-  account: icon.account,
-  url: icon.url,
-  dataPath: icon.dataPath,
-  qrPath: icon.qrPath
-}));
-`;
-
-const newIconsTsPath = path.join(__dirname, "../src/app/bg/icons-new.ts");
-fs.writeFileSync(newIconsTsPath, newIconsTs);
-
 console.log("\n========================================");
 console.log("処理完了:");
 console.log(`✓ ${processedCount}個のアイコンを正常に処理`);

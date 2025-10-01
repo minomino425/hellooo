@@ -89,7 +89,6 @@ node scripts/extract-icons-to-webp.js
 - `public/images/sprites/qr/`にQRコード画像を保存
 - `public/images/sprites/handwritings/`に手書き画像を保存
 - `src/app/bg/icons-data.json`にメタデータを保存
-- `src/app/bg/icons-new.ts`に新しいTypeScriptファイルを生成
 
 #### 2. WebP形式への変換（オプション）
 ```bash
@@ -129,21 +128,6 @@ node scripts/create-separate-spritesheets.js
 # 元画像を削除する場合
 node scripts/create-separate-spritesheets.js --cleanup
 ```
-
-#### 4. コードの更新
-```bash
-# 1. 新しいicons.tsを適用
-mv src/app/bg/icons-new.ts src/app/bg/icons.ts
-
-# 2. index.tsを最適化版に置き換え
-cp src/app/bg/index-optimized.ts src/app/bg/index.ts
-
-# 3. 型定義を更新（必要に応じて）
-# common/_interface.tsに以下を追加：
-# dataPath?: string;
-# qrPath?: string;
-```
-
 #### 5. 確認
 ```bash
 # ファイルサイズの確認

@@ -64,7 +64,10 @@ export default class CardContainer extends Container {
     this.iconSpriteSheet = iconSpriteSheet;
     this.qrSpriteSheet = qrSpriteSheet;
     this.handwritingsSpriteSheet = handwritingsSpriteSheet;
-    console.log("[CardContainer.setIcons] Spritesheets set, handwritings:", !!handwritingsSpriteSheet);
+    console.log(
+      "[CardContainer.setIcons] Spritesheets set, handwritings:",
+      !!handwritingsSpriteSheet,
+    );
     if (label1Text) this.label1Text = label1Text;
     if (label2Text) this.label2Text = label2Text;
     console.log("[CardContainer.setIcons] Calling _onResize");
@@ -90,7 +93,12 @@ export default class CardContainer extends Container {
     const margin = 10;
     const areaRatio = isSpLayout() ? 1 : 0.5;
     const numColumns = Math.ceil((ww * areaRatio) / (CardBg.WIDTH + margin));
-    console.log("[CardContainer._onResize] Calculated columns:", numColumns, "current:", this.columns.length);
+    console.log(
+      "[CardContainer._onResize] Calculated columns:",
+      numColumns,
+      "current:",
+      this.columns.length,
+    );
 
     while (this.columns.length != numColumns) {
       if (this.columns.length < numColumns) {
@@ -103,7 +111,10 @@ export default class CardContainer extends Container {
         column.x = this.columns.length * (CardBg.WIDTH + margin);
         this.container.addChild(column);
         this.columns.push(column);
-        console.log("[CardContainer._onResize] Added column", this.columns.length - 1);
+        console.log(
+          "[CardContainer._onResize] Added column",
+          this.columns.length - 1,
+        );
       } else if (this.columns.length > numColumns) {
         const column = this.columns.pop()!;
         column.destroy();
@@ -115,7 +126,11 @@ export default class CardContainer extends Container {
       // break; // TODO
     }
 
-    console.log("[CardContainer._onResize] Setting icons for", this.columns.length, "columns");
+    console.log(
+      "[CardContainer._onResize] Setting icons for",
+      this.columns.length,
+      "columns",
+    );
     this.columns.forEach((column, i) => {
       if (this.icons.length && this.iconSpriteSheet && this.qrSpriteSheet) {
         console.log("[CardContainer._onResize] Setting icons for column", i);
@@ -128,11 +143,16 @@ export default class CardContainer extends Container {
           this.label2Text,
         );
       } else {
-        console.log("[CardContainer._onResize] Skipping column", i, "- missing data", {
-          icons: this.icons.length,
-          iconSpriteSheet: !!this.iconSpriteSheet,
-          qrSpriteSheet: !!this.qrSpriteSheet,
-        });
+        console.log(
+          "[CardContainer._onResize] Skipping column",
+          i,
+          "- missing data",
+          {
+            icons: this.icons.length,
+            iconSpriteSheet: !!this.iconSpriteSheet,
+            qrSpriteSheet: !!this.qrSpriteSheet,
+          },
+        );
       }
       console.log("[CardContainer._onResize] Resetting column", i);
       column.reset(i);
