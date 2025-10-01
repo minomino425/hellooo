@@ -96,13 +96,13 @@ export default class FlipSpriteButton extends FlipSprite {
   };
 
   override async show(delay: number, duration: number = 1.25) {
-    super.show(delay, duration);
     gsap.to(this.hover, {
       alpha: 0,
       duration: 0.5,
       delay: duration + delay,
       ease: "cubic.inOut",
     });
+    return super.show(delay, duration);
   }
 
   protected override _onMouseOver(e: FederatedPointerEvent) {

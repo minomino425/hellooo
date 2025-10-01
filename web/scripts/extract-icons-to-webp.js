@@ -166,6 +166,5 @@ console.log(`\n出力先:`);
 console.log(`- 画像: ${outputDir}`);
 console.log(`- QR: ${outputQrDir}`);
 console.log(`- JSON: ${outputJsonPath}`);
-console.log(`- 新しいTypeScript: ${newIconsTsPath}`);
 
 console.log("========================================");
