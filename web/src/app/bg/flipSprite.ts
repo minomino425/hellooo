@@ -10,6 +10,7 @@ import gsap from "gsap";
 import { FlipMask } from "./flipMask";
 import { FlipBackSide } from "./flipBackSide";
 import { clear } from "console";
+import { COLORS } from "./constants";
 
 const cubicIn = gsap.parseEase("cubic.in");
 const expoOut = gsap.parseEase("expo.out");
@@ -44,10 +45,10 @@ export default class FlipSprite extends Container {
     this.maxHeight = maxHeight;
     this.sprite = new Sprite(texture);
     this.sprite.scale.set(1 / resolution, 1 / resolution);
-    this.sprite.tint = 0x000000;
+    this.sprite.tint = COLORS.black;
     const backsideSprite = new Sprite(texture);
     backsideSprite.scale.set(1 / resolution, 1 / resolution);
-    backsideSprite.tint = 0xfd5100; // ここで裏面の色指定
+    backsideSprite.tint = COLORS.orange; // ここで裏面の色指定
     this.backSide = new FlipBackSide(backsideSprite);
     const w = texture.width / resolution;
     const h = texture.height / resolution;
