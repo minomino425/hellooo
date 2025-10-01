@@ -2,6 +2,7 @@ import { Container, Sprite, Graphics, Texture } from "pixi.js";
 import CardBg from "./cardBg";
 import gsap from "gsap";
 import { COLORS } from "./constants";
+import { animateTint } from "../../utils";
 
 /**
  * カード全体を覆う手書き画像のコンテナ
@@ -10,7 +11,6 @@ import { COLORS } from "./constants";
 export default class CardHandwriting extends Container {
   private sprite: Sprite;
   private maskGraphics: Graphics;
-  private isOver: boolean = false;
 
   /**
    * コンストラクタ
@@ -48,33 +48,8 @@ export default class CardHandwriting extends Container {
     this.tint = 0x000000;
   }
 
-  async over() {
-    this.isOver = true;
-    // オレンジ→黒へのアニメーション
-    this.tint = 0xfd5100;
-    // rgbに変換
-    const rgb = this.hexToRgb(this.tint);
-    gsap.to(rgb, {
-      r: 0,
-      g: 0,
-      b: 0,
-      onUpdate: () => {
-        this.tint = (rgb.r << 16) + (rgb.g << 8) + rgb.b;
-      },
-      duration: 0.25,
-      ease: "sine.in",
-    });
-  }
-
-  hexToRgb(hex: number) {
-    const r = (hex >> 16) & 0xff;
-    const g = (hex >> 8) & 0xff;
-    const b = hex & 0xff;
-    return { r, g, b };
-  }
-
-  out() {
-    this.tint = 0x000000;
+  async over(delay: number = 0) {
+    await animateTint(this, COLORS.orange, 0x000000, delay);
   }
 
   /**

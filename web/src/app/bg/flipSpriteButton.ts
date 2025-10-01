@@ -102,7 +102,9 @@ export default class FlipSpriteButton extends FlipSprite {
       delay: duration + delay,
       ease: "cubic.inOut",
     });
-    return super.show(delay, duration);
+    console.log("[FlipSpriteButton.show] Scheduling show with delay", delay);
+    await super.show(delay, duration);
+    console.log("[FlipSpriteButton.show] Show complete");
   }
 
   protected override _onMouseOver(e: FederatedPointerEvent) {

@@ -194,7 +194,7 @@ export default class FlipSprite extends Container {
    * @param delay
    */
   show(delay: number, duration: number = 1.25) {
-    return new Promise((resolve) => {
+    return new Promise<void>((resolve) => {
       this.flipPosition = 0.001;
       this.flipAngle = Math.PI * -0.9999;
       this.visible = false;
@@ -207,10 +207,14 @@ export default class FlipSprite extends Container {
         ease: ease,
         overwrite: true,
         onStart: () => {
+          console.log("flip animation started");
           this.backSide.visible = true;
           this.visible = true;
         },
-        onComplete: resolve,
+        onComplete: () => {
+          console.log("flip animation complete");
+          resolve();
+        },
       });
       // gsap.to(this, {
       //   flipAngle: Math.PI * -0.75,
