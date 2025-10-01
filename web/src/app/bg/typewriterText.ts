@@ -36,6 +36,6 @@ export default class TypewriterText extends Text {
   }
 
   async over(delay: number = 0) {
-    await animateTint(this, COLORS.orange, 0x000000, delay);
+    await animateTint(this, COLORS.orange, 0x000000, delay, 0.75, 0.2);
   }
 }

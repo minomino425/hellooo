@@ -17,6 +17,6 @@ export default class CardSprite extends Sprite {
   }
 
   async over(delay: number = 0) {
-    await animateTint(this, COLORS.orange, 0xffffff, delay);
+    await animateTint(this, COLORS.orange, 0xffffff, delay, 0.1);
   }
 }

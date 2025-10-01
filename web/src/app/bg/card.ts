@@ -128,14 +128,14 @@ export default class Card extends Container {
       );
     }
 
-    const step = 0.02;
-    this.icon.over(0);
-    this.qr.over(step * 1);
-    this.accountLabel.over(step * 2);
-    this.account.over(step * 3);
-    this.label1.over(step * 4);
-    this.label2.over(step * 5);
-    this.handwriting?.over(step * 6);
+    const delay = 0.1;
+    this.icon.over(delay * Math.random());
+    this.qr.over(delay * Math.random());
+    this.accountLabel.over(delay * Math.random());
+    this.account.over(delay * Math.random());
+    this.label1.over(delay * Math.random());
+    this.label2.over(delay * Math.random());
+    this.handwriting?.over(delay * Math.random());
   };
 
   onMouseMove = (e: FederatedPointerEvent) => {

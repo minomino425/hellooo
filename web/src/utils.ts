@@ -12,7 +12,8 @@ export async function animateTint(
   fromColor: number,
   toColor: number = 0x000000,
   delay: number = 0,
-  duration: number = 1.0,
+  duration: number = 0.75,
+  tintDuration: number = 0.05,
 ) {
   await new Promise((resolve) => setTimeout(resolve, delay * 1000));
   target.tint = fromColor;
@@ -26,7 +27,7 @@ export async function animateTint(
       target.tint = (rgb.r << 16) + (rgb.g << 8) + rgb.b;
     },
     duration,
-    delay: 0.125,
+    delay: tintDuration,
     ease: "expo.out",
   });
 }
