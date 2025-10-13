@@ -37,7 +37,9 @@ export class Copy extends Container {
     const l1 = await Assets.load("/images/copy-connect.png.webp");
     const l2 = await Assets.load("/images/copy-everyone.png.webp");
     const l3 = await Assets.load("/images/copy-icon.png.webp");
-    const l4 = await Assets.load("/images/copy-small.png.webp");
+    const l4 = await Assets.load(
+      `/images/copy-small${isSpLayout() ? "-sp" : ""}.png.webp`,
+    );
     const t1 = await Assets.load("/images/copy-thankyou1.png.webp");
     const t2 = await Assets.load("/images/copy-thankyou2.png.webp");
     const t3 = await Assets.load("/images/copy-thankyou3.png.webp");
